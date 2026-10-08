@@ -48,26 +48,26 @@ export const products: Product[] = [
     url: 'https://pdf-tutor.pdf-tutor.workers.dev/',
   },
   {
-    // 對應 PDF-Tutor 的「管理中心」與題庫發布流程（見 pdf-tutor/ADMIN-CENTER.md）
+    // 對應 PDF-Tutor 的教師頁面（/teacher/，見 pdf-tutor/TEACHER-CENTER.md）與「管理中心」、題庫發布流程（ADMIN-CENTER.md）；不要連到 /teacher/
     id: 'teacher-console',
     name: { 'zh-TW': '教師後台', en: 'Teacher Console' },
-    subtitle: { 'zh-TW': 'PDF-Tutor 管理中心', en: 'PDF-Tutor admin center' },
+    subtitle: { 'zh-TW': '教室管理與管理中心', en: 'Classrooms & admin center' },
     tagline: {
-      'zh-TW': '建置自己的考古題題庫，集中掌握每位學生使用 PDF-Tutor 的情形。',
-      en: 'Build your own exam bank and see how every student is using PDF-Tutor.',
+      'zh-TW': '開設教室、批量建立學生帳號，並建置自己的考古題題庫、掌握每位學生的使用情形。',
+      en: 'Set up classrooms, create student accounts in bulk, build your own exam bank and see how every student is using PDF-Tutor.',
     },
     features: {
       'zh-TW': [
+        '開設教室，貼上座號與姓名即可批量建立學生帳號，帳密可下載或列印',
+        '勾選學生批量啟用、停用，查看每人今日與近 7 天的 AI 用量',
         '上傳試卷 PDF，AI 協助切題、擷取答案與標註單元，審核後發布',
-        '用邀請碼開通學生帳號，設定每日額度與啟用狀態',
-        '總覽所有學生的使用情形與 AI 用量，可匯出 CSV',
-        '唯讀查閱學生的作業與講解紀錄，所有查閱都會留下紀錄',
+        '管理中心總覽全部帳號與 AI 用量並可匯出 CSV，唯讀查閱都會留下紀錄',
       ],
       en: [
+        'Set up classrooms and create student accounts in bulk from seat numbers and names — download or print the sign-in slips',
+        'Enable or disable students in bulk and see each student’s AI usage today and over the last 7 days',
         'Upload exam PDFs — AI helps split questions, extract answers and tag topics for your review',
-        'Onboard students with invite codes and set daily limits and access',
-        'Overview of every student’s activity and AI usage, with CSV export',
-        'Read-only access to students’ work and tutoring history, with every view logged',
+        'The admin center shows every account and its AI usage with CSV export; every read-only view of student work is logged',
       ],
     },
     audience: ['teachers', 'schools'],

@@ -106,12 +106,12 @@ const en: Dictionary = {
     meta: {
       title: 'Products',
       description:
-        'Explore PDF-Tutor, the tap-to-explain homework tutor, the Teacher Console (admin center) and the Reading Room & Exam Bank — AI tools for learning, plus tools for teachers to build exam banks and follow student usage.',
+        'Explore PDF-Tutor, the tap-to-explain homework tutor, the Teacher Console and the Reading Room & Exam Bank — AI tools for learning, plus tools for teachers to run classrooms, manage students and build exam banks.',
     },
     hero: {
       eyebrow: 'Products',
       title: 'From a single tap on a question to a whole class',
-      lead: 'Three products on one platform: students practise and read with PDF-Tutor, while teachers build exam banks and follow usage in the admin center.',
+      lead: 'Three products on one platform: students practise and read with PDF-Tutor, while teachers run classrooms, manage students, build exam banks and follow usage in the Teacher Console.',
     },
     legend: {
       title: 'About beta features',
@@ -287,7 +287,7 @@ const en: Dictionary = {
         heading: '1. Scope',
         blocks: [
           {
-            text: 'This policy covers our website twctchem.com and PDF-Tutor (including the Teacher Console / admin center, the Reading Room and the Exam Bank). Each product handles data differently, as explained below.',
+            text: 'This policy covers our website twctchem.com and PDF-Tutor (including the Teacher Console’s classrooms and admin center, the Reading Room and the Exam Bank). Each product handles data differently, as explained below.',
           },
         ],
       },
@@ -306,7 +306,7 @@ const en: Dictionary = {
             subheading: '2.3 PDF-Tutor accounts and learning data (cloud version)',
             text: 'The cloud version requires you to sign in. Depending on the features you use, we process:',
             items: [
-              'Account data: your username and sign-in password (passwords are not stored in plain text).',
+              'Account data: your username and sign-in password (passwords are not stored in plain text). Accounts created by a teacher also include the name the teacher entered.',
               'Learning content: the homework PDFs you upload, question markers, your conversations with the AI, mistake notebook, learning profile and progress.',
               'Reading Room data: reading notes, highlights, vocabulary and flashcards, quiz records and reading progress. Book files stay on your device by default and reach the cloud only if you upload them.',
               'Usage records: your daily AI usage count, and for each AI request its time, account, model and service used, result and usage. These records do not store your prompts or the full AI answers.',
@@ -341,10 +341,13 @@ const en: Dictionary = {
         ],
       },
       {
-        heading: '5. Administrator access',
+        heading: '5. Administrator and teacher access',
         blocks: [
           {
             text: 'When a school or teacher uses the admin center, administrators can see the account list and usage statistics, and can view students’ cloud homework, Reading Room data and conversations in read-only mode. Read-only means administrators cannot edit, delete or download this content, and every view is recorded in an audit log.',
+          },
+          {
+            text: 'Teacher accounts can only see, for students in their own classrooms, the username, the name the teacher entered, active status, last sign-in time and daily AI usage. They cannot view homework, Reading Room data or conversations. Every time a teacher creates, adds, enables, disables or removes a student, it is recorded in the administrators’ audit log.',
           },
         ],
       },
@@ -355,7 +358,7 @@ const en: Dictionary = {
             items: [
               'Period: while the account exists, or as long as necessary to achieve the purpose of collection. When an account is deleted, its cloud data is deleted with it; contact-form data is kept for a reasonable period after your enquiry is handled.',
               'Area: where we operate and where our hosting, form and AI service providers operate, which may be outside Taiwan.',
-              'Recipients: us and the contractors who help us deliver the service (website hosting, form delivery, cloud storage and AI services). Admin access is limited to that organization’s administrators. We do not sell your personal data.',
+              'Recipients: us and the contractors who help us deliver the service (website hosting, form delivery, cloud storage and AI services). Admin access is limited to that organization’s administrators and, within the limits in section 5, the teacher of the student’s classroom. We do not sell your personal data.',
               'Methods: processed electronically and used only within the purposes above.',
             ],
           },
@@ -433,7 +436,7 @@ const en: Dictionary = {
         heading: '1. Accepting these terms',
         blocks: [
           {
-            text: 'These terms apply to our website twctchem.com and to products such as PDF-Tutor (including the Teacher Console / admin center, the Reading Room and the Exam Bank). If you use the service on behalf of a school or organization, you confirm you are authorized to accept these terms for it.',
+            text: 'These terms apply to our website twctchem.com and to products such as PDF-Tutor (including the Teacher Console’s classrooms and admin center, the Reading Room and the Exam Bank). If you use the service on behalf of a school or organization, you confirm you are authorized to accept these terms for it.',
           },
         ],
       },
@@ -441,7 +444,7 @@ const en: Dictionary = {
         heading: '2. The service',
         blocks: [
           {
-            text: 'We provide AI learning tools, such as tap-to-explain homework help, mistake notebooks, textbook reading, past-paper practice and an admin center for teachers to build exam banks and manage student accounts. Features marked Beta are still being tested and may be changed or withdrawn.',
+            text: 'We provide AI learning tools, such as tap-to-explain homework help, mistake notebooks, textbook reading, past-paper practice and a Teacher Console for teachers to run classrooms, manage student accounts and build exam banks. Features marked Beta are still being tested and may be changed or withdrawn.',
           },
         ],
       },
@@ -449,7 +452,7 @@ const en: Dictionary = {
         heading: '3. Accounts and acceptable use',
         blocks: [
           {
-            text: 'Cloud accounts are created by an administrator with an invite code. You must keep your sign-in details safe and are responsible for activity under your account. You agree not to:',
+            text: 'Cloud accounts are created by an administrator with an invite code or by a teacher in the Teacher Console. You must keep your sign-in details safe and are responsible for activity under your account. You agree not to:',
             items: [
               'Lend, transfer or share your account with others.',
               'Upload content that is unlawful, infringes the rights of others, or that you have no right to use.',

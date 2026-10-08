@@ -69,7 +69,7 @@ const legalLinks = [
 
     <div class="footer-bottom">
       <p>© {year} {site.name[lang]}{lang === 'en' ? '. ' : ' '}{t.footer.rights}</p>
-      <p>{t.footer.taxId}{lang === 'en' ? ': ' : '：'}{site.taxId}</p>
+      {site.taxId && <p>{t.footer.taxId}{lang === 'en' ? ': ' : '：'}{site.taxId}</p>}
     </div>
   </div>
 </footer>

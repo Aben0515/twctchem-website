@@ -22,7 +22,7 @@ Astro 靜態網站，push 到 GitHub `main` 後由 GitHub Actions（`.github/wor
 - **公司資訊**：名稱、統編、Email、Web3Forms key 只能放在 `src/site.config.ts`，不要寫死在頁面裡
 - **產品資料**：放在 `src/data/products.ts`，`ProductCard` 和 `Footer` 都從這裡讀取
 - **PDF-Tutor 介紹**：PDF-Tutor 就是 `C:\Users\yuana\Desktop\PDF作業講解器\pdf-tutor`。寫產品頁、FAQ、隱私權政策前，先讀它的 `README.md`（功能說明、隱私說明、限制），只寫實際存在的功能
-- **教師後台** = PDF-Tutor 的「管理中心」（`pdf-tutor/ADMIN-CENTER.md`），可建置題庫、管理學生帳號與用量；**閱讀室與題庫**是 PDF-Tutor 的原文書閱讀室與考古題題庫（Beta）
+- **教師後台** = PDF-Tutor 的教師頁面 `/teacher/`（`pdf-tutor/TEACHER-CENTER.md`：開設教室、批量建立學生帳號、批量啟用／停用、查看用量；入口刻意不公開，官網不要放連結）加上管理員用的「管理中心」（`pdf-tutor/ADMIN-CENTER.md`：建置題庫、全部帳號與用量、唯讀查閱）；**閱讀室與題庫**是 PDF-Tutor 的原文書閱讀室與考古題題庫（Beta）
 - PDF-Tutor 網址：https://pdf-tutor.pdf-tutor.workers.dev/（寫在 products.ts 的 `url`）
 - **版型**：每頁用 `BaseLayout`，傳入 `lang`、`title`、`description`
 - **圖示**：在 `src/components/icons.ts` 新增 path，再用 `<Icon name="..." />` 顯示

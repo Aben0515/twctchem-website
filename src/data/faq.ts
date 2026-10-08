@@ -119,25 +119,27 @@ export const faqs: FaqItem[] = [
     },
     answer: {
       'zh-TW': [
-        '請透過「聯絡我們」表單或直接寄信給我們，說明你的使用情境與人數。學生帳號由管理員以邀請碼開通，並可個別設定每日使用額度與啟用狀態。',
+        '請透過「聯絡我們」表單或直接寄信給我們，說明你的使用情境與人數。學生帳號可由管理員以邀請碼開通，或由教師在教師後台批量建立；管理員可個別設定每日使用額度，教師可批量啟用或停用自己教室的學生。',
       ],
       en: [
-        'Use the contact form or write to us directly and tell us how you would use it and for how many people. Student accounts are created by an administrator with invite codes, and each account can have its own daily limit and active status.',
+        'Use the contact form or write to us directly and tell us how you would use it and for how many people. Student accounts can be opened by an administrator with invite codes or created in bulk by teachers in the Teacher Console. Administrators can set each account’s daily limit, and teachers can enable or disable the students in their own classrooms.',
       ],
     },
   },
   {
     category: 'cooperation',
     question: {
-      'zh-TW': '教師後台（管理中心）可以做什麼？',
-      en: 'What can the Teacher Console (admin center) do?',
+      'zh-TW': '教師後台可以做什麼？',
+      en: 'What can the Teacher Console do?',
     },
     answer: {
       'zh-TW': [
-        '管理中心有總覽、帳號、用量與費用、AI 服務、邀請碼與操作紀錄六個分頁。教師可以搜尋與管理學生帳號、設定每日額度、查看近 7 天、30 天或自訂區間的使用情形並匯出 CSV，也能上傳試卷 PDF 建置自己的考古題題庫：AI 協助切題、擷取答案與標註單元，由教師審核後再發布。',
+        '教師後台分成兩部分。教師帳號由管理員指定，登入教師專用頁面後可以開設教室：貼上「座號 姓名」名單就能批量建立學生帳號（帳號為「教室代號-座號」，臨時密碼只顯示一次，可下載 CSV 或列印帳密條），也能把既有帳號加入教室、批量啟用或停用學生，並查看每位學生今日與近 7 天的 AI 用量。教師只看得到自己教室學生的帳號狀態與用量，看不到作業或對話內容。',
+        '管理中心給學校的管理員使用，有總覽、帳號、用量與費用、AI 服務、邀請碼與操作紀錄六個分頁：可以搜尋與管理所有帳號、設定每日額度、查看近 7 天、30 天或自訂區間的使用情形並匯出 CSV，也能上傳試卷 PDF 建置考古題題庫，由 AI 協助切題、擷取答案與標註單元，審核後再發布。教師的每一項操作也都會記錄在操作紀錄裡。',
       ],
       en: [
-        'The admin center has six tabs: overview, accounts, usage & cost, AI service, invite codes and audit log. Teachers can search and manage student accounts, set daily limits, review usage over the last 7 or 30 days or a custom range and export it as CSV. They can also upload exam PDFs to build their own exam bank — AI helps split questions, extract answers and tag topics, and the teacher reviews everything before publishing.',
+        'The Teacher Console has two parts. Teacher accounts are designated by an administrator and sign in to a dedicated teacher page to set up classrooms: paste a list of seat numbers and names to create student accounts in bulk (usernames follow “class code-seat number”, and temporary passwords are shown only once, ready to download as CSV or print as slips). Teachers can also add existing accounts to a classroom, enable or disable students in bulk and see each student’s AI usage today and over the last 7 days. Teachers only see the account status and usage of students in their own classrooms — never their homework or conversations.',
+        'The admin center is for the school’s administrators and has six tabs: overview, accounts, usage & cost, AI service, invite codes and audit log. Administrators can search and manage every account, set daily limits, review usage over the last 7 or 30 days or a custom range and export it as CSV, and upload exam PDFs to build an exam bank — AI helps split questions, extract answers and tag topics, and everything is reviewed before publishing. Every teacher action is also recorded in the audit log.',
       ],
     },
   },

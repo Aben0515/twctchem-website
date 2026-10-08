@@ -16,10 +16,10 @@ const t = useTranslations(lang);
 const about = t.about;
 const rows = about.info.rows;
 
-// 電話與地址留空時不顯示
+// 統編、電話與地址留空時不顯示
 const infoRows = [
   { label: rows.name, value: site.name[lang] },
-  { label: rows.taxId, value: site.taxId },
+  site.taxId && { label: rows.taxId, value: site.taxId },
   { label: rows.founded, value: site.founded },
   { label: rows.email, value: site.email, href: `mailto:${site.email}` },
   site.phone && { label: rows.phone, value: site.phone, href: `tel:${site.phone.replace(/[^\d+]/g, '')}` },

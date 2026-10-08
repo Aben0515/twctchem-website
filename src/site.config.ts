@@ -11,7 +11,8 @@ export const site = {
     'zh-TW': '【公司正式名稱】',
     en: '[Company Legal Name]',
   },
-  taxId: '【統一編號】',
+  /** 統一編號；留空字串則全站不顯示 */
+  taxId: '' as string,
   founded: '【成立年份】',
   email: 'sales@twctchem.com',
   /** 留空字串則不顯示 */
@@ -25,5 +26,5 @@ export const site = {
   /** 一般客服回覆時間（工作天） */
   replyWithinDays: '1–2',
   /** 隱私權政策與服務條款的最後更新日期（ISO 格式），修改條文時一併更新 */
-  legalUpdated: '2026-10-08',
+  legalUpdated: '2026-10-09',
 } as const;

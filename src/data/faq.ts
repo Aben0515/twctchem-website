@@ -1,4 +1,5 @@
 import type { Localized } from '../i18n/utils';
+import { site } from '../site.config';
 
 export type FaqCategory = 'product' | 'cooperation' | 'privacy';
 
@@ -15,6 +16,23 @@ export interface FaqItem {
  */
 export const faqs: FaqItem[] = [
   // ---------- 產品與功能 ----------
+  {
+    category: 'product',
+    question: {
+      'zh-TW': '產品目前使用 Claude 嗎？',
+      en: 'Does the product currently use Claude?',
+    },
+    answer: {
+      'zh-TW': [
+        '我們目前使用 Claude 輔助產品開發。產品內的 Claude API 教育應用仍在評估，未來可能探索題目講解、解答回饋與閱讀輔助，目前沒有確定的導入時程。雲端版實際使用的 AI 服務與模型由管理員設定；單機模式則由使用者設定。',
+        '若導入讓未成年人直接互動的 Claude 功能，將先評估適齡使用、內容安全與資料處理安排，並在實際使用方式或資料處理方式變更時更新相關說明。',
+      ],
+      en: [
+        'We currently use Claude to support product development. Educational uses of the Claude API within the product are still under evaluation, including possible question explanations, feedback on students’ work and reading assistance. There is no confirmed integration timeline. The AI service and model actually used in cloud mode are configured by the administrator; in standalone mode, they are configured by the user.',
+        'Before introducing Claude features that minors interact with directly, we will assess age-appropriate use, content safety and data handling, and update the relevant notices when actual usage or data handling changes.',
+      ],
+    },
+  },
   {
     category: 'product',
     question: {
@@ -160,6 +178,25 @@ export const faqs: FaqItem[] = [
   },
 
   // ---------- 資料與隱私 ----------
+  {
+    category: 'privacy',
+    question: {
+      'zh-TW': '未成年人如何使用？',
+      en: 'How can minors use the service?',
+    },
+    answer: {
+      'zh-TW': [
+        '未成年人可由學校或教師安排使用，也可自行使用。由學校或教師安排時，該學校或教師應在使用前完成依法令所需的告知與同意；自行使用前，須取得法定代理人的同意。雲端帳號透過邀請碼建立，或由教師批量建立。',
+        '教師可啟用或停用自己教室的學生帳號，管理員可設定每日 AI 使用額度。這些是帳號與用量管理措施，不能代替年齡驗證、法定代理人同意的確認或內容過濾。AI 回答可能有誤，請與教材、教師或法定代理人一起確認重要內容，並避免提交與學習無關的個人資料。',
+        `若遇到不適當回答或隱私問題，請停止該次互動，並由本人、法定代理人、學校或教師寄信至 ${site.email}。通報時請簡述問題與使用情境；我們不要求提供密碼或完整學生資料，附上截圖前請遮蔽非必要的個人資訊。詳細說明請見隱私權政策的「兒童與未成年人」。`,
+      ],
+      en: [
+        'Minors may use the service through a school or teacher, or on their own. For school- or teacher-arranged use, the school or teacher must complete the notices and obtain the consents required by law before use begins. Minors using it on their own must first obtain consent from a legal guardian. Cloud accounts are created with an invite code or in bulk by a teacher.',
+        'Teachers can enable or disable accounts in their own classrooms, and administrators can set daily AI usage limits. These measures manage accounts and usage; they do not replace age verification, confirmation of guardian consent or content filtering. AI responses may be wrong: check important content against learning materials with a teacher or legal guardian, and avoid submitting personal data unrelated to learning.',
+        `If you encounter an inappropriate response or a privacy concern, stop that interaction. You, your legal guardian, school or teacher can email ${site.email} with a brief description of the issue and how the service was being used. We do not ask for passwords or complete student records when reporting a concern; remove unnecessary personal information before attaching screenshots. See “Children and minors” in the Privacy Policy for details.`,
+      ],
+    },
+  },
   {
     category: 'privacy',
     question: {

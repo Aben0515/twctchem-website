@@ -65,6 +65,20 @@ const page = t.productsPage;
     </div>
   </section>
 
+  <section class="section">
+    <div class="container">
+      <SectionHeading eyebrow={page.technology.eyebrow} title={page.technology.title} lead={page.technology.lead} />
+      <div class="technology-grid">
+        {page.technology.items.map((item) => (
+          <article class="technology-item">
+            <h3>{item.title}</h3>
+            <p>{item.body}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
   <CTABanner
     title={t.home.cta.title}
     body={t.home.cta.body}
@@ -159,7 +173,29 @@ const page = t.productsPage;
     color: var(--ink-muted);
   }
 
+  .technology-grid {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .technology-item {
+    display: grid;
+    align-content: start;
+    gap: 0.75rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line-strong);
+  }
+
+  .technology-item p {
+    color: var(--ink-muted);
+  }
+
   @media (min-width: 768px) {
+    .technology-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 3rem;
+    }
+
     .steps {
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 3rem;

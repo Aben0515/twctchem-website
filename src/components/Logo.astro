@@ -1,11 +1,12 @@
 ---
 import { site } from '../site.config';
 import type { Lang } from '../i18n/utils';
+import { logoPaths, logoTasselEnd, logoViewBox } from '../data/logo';
 
 interface Props {
   /** Logo 文字依語言顯示品牌名稱 */
   lang: Lang;
-  /** 圖形標誌邊長（px） */
+  /** 圖形標誌高度（px） */
   size?: number;
   /** 只顯示圖形標誌 */
   markOnly?: boolean;
@@ -13,22 +14,28 @@ interface Props {
   inverted?: boolean;
 }
 
-const { lang, size = 34, markOnly = false, inverted = false } = Astro.props;
+const { lang, size = 36, markOnly = false, inverted = false } = Astro.props;
+// 圖形只占 48 格線中的 x 5–43、y 3–46，裁掉四周留白
+const width = Math.round((size * 38) / 43);
 ---
 
 <span class:list={['logo', { 'logo--inverted': inverted }]}>
-  <!-- 圖形：墨綠底上一本攤開的書，右頁夾著陶土橘書籤 -->
-  <svg class="logo-mark" width={size} height={size} viewBox="0 0 32 32" aria-hidden="true" focusable="false">
-    <rect width="32" height="32" rx="8" fill="var(--logo-tile, #1F4D3A)"></rect>
-    <path d="M7.5 10.2c3-1 6-.6 8.5 1.3v11.6c-2.5-1.6-5.5-2-8.5-1.1z" fill="#FAF7F2"></path>
-    <path d="M24.5 10.2c-3-1-6-.6-8.5 1.3v11.6c2.5-1.6 5.5-2 8.5-1.1z" fill="#FAF7F2" opacity="0.78"></path>
-    <path d="M19.6 9.4h2.6v5.4l-1.3-1-1.3 1z" fill="#D97757"></path>
+  <!-- 圖形「Mentor Bubble」：戴學士帽的對話框，框內是 AI 火花；帽子與對話框之間的 V 形缺口是鏤空 -->
+  <svg class="logo-mark" width={width} height={size} viewBox={logoViewBox} aria-hidden="true" focusable="false">
+    <path class="logo-bubble" d={logoPaths.bubble}></path>
+    <path class="logo-cap" d={logoPaths.cap}></path>
+    <path class="logo-tassel" d={logoPaths.tassel} fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
+    <circle class="logo-tassel-end" {...logoTasselEnd}></circle>
+    <path class="logo-spark" d={logoPaths.spark}></path>
   </svg>
   {!markOnly && <span class="logo-word">{site.name[lang]}</span>}
 </span>
 
 <style>
   .logo {
+    --logo-bubble: var(--primary);
+    --logo-cap: var(--ink);
+    --logo-spark: var(--on-primary);
     display: inline-flex;
     align-items: center;
     gap: 0.625rem;
@@ -36,12 +43,34 @@ const { lang, size = 34, markOnly = false, inverted = false } = Astro.props;
   }
 
   .logo--inverted {
+    --logo-bubble: var(--on-primary);
+    --logo-cap: var(--on-primary);
+    --logo-spark: var(--primary);
     color: var(--on-primary);
-    --logo-tile: #faf7f2;
   }
 
-  .logo--inverted .logo-mark path:not(:last-child) {
-    fill: var(--primary);
+  .logo-mark {
+    flex-shrink: 0;
+  }
+
+  .logo-bubble {
+    fill: var(--logo-bubble);
+  }
+
+  .logo-cap {
+    fill: var(--logo-cap);
+  }
+
+  .logo-tassel {
+    stroke: var(--accent);
+  }
+
+  .logo-tassel-end {
+    fill: var(--accent);
+  }
+
+  .logo-spark {
+    fill: var(--logo-spark);
   }
 
   .logo-word {

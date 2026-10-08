@@ -5,6 +5,8 @@ import SectionHeading from '../components/SectionHeading.astro';
 import ProductCard from '../components/ProductCard.astro';
 import CTABanner from '../components/CTABanner.astro';
 import HeroDemo from '../components/HeroDemo.astro';
+import HeroIntro from '../components/HeroIntro.astro';
+import HeroWatermark from '../components/HeroWatermark.astro';
 import type { IconName } from '../components/icons';
 import { products } from '../data/products';
 import { site } from '../site.config';
@@ -21,6 +23,18 @@ const otherLang: Lang = lang === 'en' ? 'zh-TW' : 'en';
 ---
 
 <BaseLayout lang={lang}>
+  <!-- 開場動畫是否播放：要在首次繪製前決定，所以放在 <head>（說明見 HeroIntro.astro） -->
+  <script is:inline slot="head">
+    try {
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches && !sessionStorage.getItem('ct-intro')) {
+        document.documentElement.classList.add('intro');
+      }
+    } catch (e) {
+      // 無法讀取 sessionStorage 時不播開場
+    }
+  </script>
+  <HeroIntro />
+
   <!-- Hero：品牌字標當主標題，標語當副標 -->
   <section class="hero">
     <div class="hero-lines" aria-hidden="true"></div>
@@ -46,6 +60,7 @@ const otherLang: Lang = lang === 'en' ? 'zh-TW' : 'en';
         </p>
       </div>
       <div class="hero-art">
+        <HeroWatermark />
         <HeroDemo lang={lang} label={home.hero.illustrationLabel} />
       </div>
     </div>
@@ -284,8 +299,25 @@ const otherLang: Lang = lang === 'en' ? 'zh-TW' : 'en';
   }
 
   .hero-art {
+    position: relative;
     width: min(100%, 560px);
     justify-self: center;
+  }
+
+  /* 開場動畫期間 hero 內容先往下 18px，遮罩淡出時上浮歸位（只用 transform，不影響 LCP） */
+  :global(html.intro) .hero-copy,
+  :global(html.intro) .hero-art {
+    transform: translateY(18px);
+  }
+
+  :global(html.intro-out) .hero-copy,
+  :global(html.intro-out) .hero-art {
+    transform: none;
+    transition: transform 1s var(--ease) 0.25s;
+  }
+
+  :global(html.intro-out) .hero-art {
+    transition-delay: 0.4s;
   }
 
   @media (min-width: 960px) {

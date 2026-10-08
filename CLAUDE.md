@@ -46,6 +46,8 @@ Astro 靜態網站，push 到 GitHub `main` 後由 GitHub Actions（`.github/wor
 完成：設計系統、Logo、favicon、OG 圖、Header、Footer、首頁、`/products/`、`/about/`、`/faq/`、`/contact/`、`/privacy/`、`/terms/`、404（皆中英文）
 
 補充：
+- Logo 圖形是「Mentor Bubble」（戴學士帽的對話框，框內是火花）。路徑在 `src/data/logo.ts`（`Logo.astro`、`HeroIntro.astro`、`HeroWatermark.astro` 共用），`public/favicon.svg`、`scripts/generate-images.mjs` 各有一份副本，改圖形要一起改；網站以外用的檔案（SVG／PNG、單色版、App 圖示、使用規範）在 `brand/cyber-tutor/`
+- 首頁開場動畫是 `HeroIntro.astro`：大 logo 畫出後飛進頁首 logo。是否播放由 `Home.astro` 放進 `<head>`（BaseLayout 的 `head` slot）的 inline script 決定：每個工作階段只播一次（sessionStorage `ct-intro`），減少動態時不播；點擊、按鍵或滾動會跳過。開場期間 hero 文字不改 opacity，以免拖慢 LCP。hero 右側會轉向游標的大型線稿是 `HeroWatermark.astro`
 - FAQ 資料在 `src/data/faq.ts`；法律頁條文在 `i18n` 的 `privacy` / `terms`，由 `LegalLayout.astro` 渲染，條文裡的 `{company}`、`{email}` 會自動代入，最後更新日期在 `site.config.ts` 的 `legalUpdated`
 - 文案裡的 `{days}` 等佔位字串用 `fill()`（`i18n/utils.ts`）代入
 - 聯絡表單是 `ContactForm.astro`，用 Web3Forms 寄到 sales@twctchem.com（key 在 `site.config.ts`）

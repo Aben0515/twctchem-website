@@ -1,0 +1,110 @@
+---
+/**
+ * 首頁 hero 右側、演示視窗後方的大型 logo 線稿。
+ * 有滑鼠的裝置上會 3D 轉向游標，框內的火花跟著游標微移；減少動態時保持靜止。
+ * 開場動畫（HeroIntro）播放期間隱藏，結束後淡入。
+ */
+import { logoPaths, logoTasselEnd, logoViewBox } from '../data/logo';
+---
+
+<div class="watermark" aria-hidden="true">
+  <svg class="watermark-mark" viewBox={logoViewBox} focusable="false" data-watermark>
+    <path class="watermark-bubble" d={logoPaths.bubble}></path>
+    <path class="watermark-line" d={logoPaths.cap}></path>
+    <path class="watermark-line" d={logoPaths.tassel}></path>
+    <circle class="watermark-dot" {...logoTasselEnd}></circle>
+    <path class="watermark-spark" d={logoPaths.spark} data-watermark-spark></path>
+  </svg>
+</div>
+
+<style>
+  .watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 108%;
+    translate: -50% -50%;
+    perspective: 1200px;
+    pointer-events: none;
+    transition: opacity 1.4s var(--ease);
+  }
+
+  :global(html.intro) .watermark {
+    opacity: 0;
+  }
+
+  .watermark-mark {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .watermark-bubble,
+  .watermark-line,
+  .watermark-spark {
+    stroke: var(--line-strong);
+    stroke-width: 1;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .watermark-bubble {
+    fill: var(--primary-soft);
+    fill-opacity: 0.45;
+  }
+
+  .watermark-line {
+    fill: none;
+  }
+
+  .watermark-spark {
+    fill: var(--primary-soft);
+  }
+
+  .watermark-dot {
+    fill: var(--accent);
+    opacity: 0.5;
+  }
+</style>
+
+<script>
+  const mark = document.querySelector<SVGSVGElement>('[data-watermark]');
+  const spark = document.querySelector<SVGPathElement>('[data-watermark-spark]');
+  const hero = mark?.closest<HTMLElement>('.hero');
+  const canInteract =
+    matchMedia('(hover: hover) and (pointer: fine)').matches &&
+    !matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (mark && spark && hero && canInteract) {
+    // target：游標相對 hero 中心的位置（-0.5 ~ 0.5）；current：平滑跟隨的值
+    const target = { x: 0, y: 0 };
+    const current = { x: 0, y: 0 };
+    let frame = 0;
+
+    const render = () => {
+      current.x += (target.x - current.x) * 0.06;
+      current.y += (target.y - current.y) * 0.06;
+      mark.style.transform = `rotateX(${(-current.y * 14).toFixed(2)}deg) rotateY(${(current.x * 22).toFixed(2)}deg)`;
+      spark.setAttribute('transform', `translate(${(current.x * 7).toFixed(2)} ${(current.y * 5).toFixed(2)})`);
+      // 接近目標就停，不讓 requestAnimationFrame 一直空轉
+      frame = Math.abs(target.x - current.x) + Math.abs(target.y - current.y) > 0.001 ? requestAnimationFrame(render) : 0;
+    };
+    const wake = () => {
+      if (!frame) frame = requestAnimationFrame(render);
+    };
+
+    hero.addEventListener('pointermove', (event) => {
+      const rect = hero.getBoundingClientRect();
+      target.x = (event.clientX - rect.left) / rect.width - 0.5;
+      target.y = (event.clientY - rect.top) / rect.height - 0.5;
+      wake();
+    });
+    hero.addEventListener('pointerleave', () => {
+      target.x = 0;
+      target.y = 0;
+      wake();
+    });
+  }
+</script>

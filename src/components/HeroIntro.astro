@@ -1,0 +1,228 @@
+---
+/**
+ * 首頁開場：大型 logo 一筆畫出 → 戴上學士帽 → 火花點亮 → 縮小飛進頁首 logo 的位置。
+ * 是否播放由 Home.astro 放在 <head> 的 inline script 決定（在 <html> 加上 `intro` class）：
+ * 減少動態或同一個工作階段已播過（sessionStorage `ct-intro`）就不播；沒有 JS 時遮罩不會出現。
+ * 遮罩蓋住頁面時，底下的主標題照常繪製（不改 opacity），所以不影響 LCP。
+ */
+import { logoPaths, logoTasselEnd, logoViewBox } from '../data/logo';
+---
+
+<div class="intro" data-intro aria-hidden="true">
+  <div class="intro-bg"></div>
+  <svg class="intro-mark" viewBox={logoViewBox} focusable="false">
+    <circle class="intro-ring" cx="24" cy="28.5" r="6"></circle>
+    <path class="intro-bubble" d={logoPaths.bubble} pathLength="1"></path>
+    <g class="intro-cap">
+      <path class="intro-cap-shape" d={logoPaths.cap}></path>
+      <path class="intro-tassel" d={logoPaths.tassel} pathLength="1"></path>
+      <circle class="intro-tassel-end" {...logoTasselEnd}></circle>
+    </g>
+    <path class="intro-spark" d={logoPaths.spark}></path>
+  </svg>
+</div>
+
+<style>
+  .intro {
+    display: none;
+  }
+
+  :global(html.intro) .intro {
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+    display: grid;
+    place-items: center;
+    /* 保險：就算 script 出錯，7 秒後遮罩也會消失 */
+    animation: intro-failsafe 0s 7s forwards;
+  }
+
+  /* 頁首 logo 等大 logo 飛到才出現 */
+  :global(html.intro .site-header .logo-mark) {
+    visibility: hidden;
+  }
+
+  .intro-bg {
+    position: absolute;
+    inset: 0;
+    background: var(--bg);
+  }
+
+  .intro-mark {
+    position: relative;
+    height: min(34vh, 260px);
+    aspect-ratio: 38 / 43;
+    overflow: visible;
+    /* FLIP 以左上角為基準縮放 */
+    transform-origin: 0 0;
+  }
+
+  /* 以下是動畫起始狀態，由 script 播放到最終狀態 */
+  .intro-ring {
+    fill: none;
+    stroke: var(--primary);
+    stroke-width: 0.5;
+    opacity: 0;
+    transform-origin: 24px 28.5px;
+  }
+
+  .intro-bubble {
+    fill: var(--primary);
+    fill-opacity: 0;
+    stroke: var(--primary);
+    stroke-width: 0.35;
+    stroke-linejoin: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+
+  .intro-cap {
+    opacity: 0;
+  }
+
+  .intro-cap-shape {
+    fill: var(--ink);
+  }
+
+  .intro-tassel {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+
+  .intro-tassel-end {
+    fill: var(--accent);
+    transform-origin: 34.5px 21px;
+    transform: scale(0);
+  }
+
+  .intro-spark {
+    fill: var(--on-primary);
+    transform-origin: 24px 28.5px;
+    transform: scale(0);
+  }
+
+  @keyframes intro-failsafe {
+    to {
+      visibility: hidden;
+    }
+  }
+</style>
+
+<script>
+  const root = document.documentElement;
+  const intro = document.querySelector<HTMLElement>('[data-intro]');
+
+  if (intro && root.classList.contains('intro')) run(intro);
+
+  function run(intro: HTMLElement) {
+    const $ = (selector: string) => intro.querySelector<SVGElement | HTMLElement>(selector)!;
+    const mark = $('.intro-mark');
+    const ease = 'cubic-bezier(0.2, 0.7, 0.2, 1)';
+    const steps: Animation[] = [];
+    const play = (el: Element, keyframes: Keyframe[], options: KeyframeAnimationOptions) => {
+      const animation = el.animate(keyframes, { fill: 'forwards', easing: ease, ...options });
+      steps.push(animation);
+      return animation;
+    };
+
+    // 1. 一筆畫出對話框，再填滿墨綠
+    play($('.intro-bubble'), [{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], {
+      duration: 1100,
+      easing: 'cubic-bezier(0.6, 0, 0.3, 1)',
+    });
+    play($('.intro-bubble'), [{ fillOpacity: 0 }, { fillOpacity: 1 }], { duration: 500, delay: 900 });
+
+    // 2. 學士帽落下、微微回彈，流蘇畫出、圓點彈出
+    play(
+      $('.intro-cap'),
+      [
+        { opacity: 0, transform: 'translateY(-14px) rotate(-8deg)' },
+        { opacity: 1, transform: 'translateY(1.2px) rotate(0deg)', offset: 0.7 },
+        { opacity: 1, transform: 'none' },
+      ],
+      { duration: 650, delay: 1250, easing: 'cubic-bezier(0.3, 0, 0.3, 1)' },
+    );
+    play($('.intro-tassel'), [{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], { duration: 350, delay: 1750 });
+    play(
+      $('.intro-tassel-end'),
+      [{ transform: 'scale(0)' }, { transform: 'scale(1.4)', offset: 0.6 }, { transform: 'scale(1)' }],
+      { duration: 350, delay: 2000 },
+    );
+
+    // 3. 火花旋轉點亮，放出一道圓波
+    play(
+      $('.intro-spark'),
+      [
+        { transform: 'scale(0) rotate(-120deg)' },
+        { transform: 'scale(1.25) rotate(10deg)', offset: 0.7 },
+        { transform: 'scale(1) rotate(0deg)' },
+      ],
+      { duration: 600, delay: 2100 },
+    );
+    play(
+      $('.intro-ring'),
+      [
+        { opacity: 0.9, transform: 'scale(1)', strokeWidth: 0.5 },
+        { opacity: 0, transform: 'scale(10)', strokeWidth: 0.01 },
+      ],
+      { duration: 1200, delay: 2250, easing: 'cubic-bezier(0.1, 0.6, 0.3, 1)' },
+    );
+
+    // 4. 縮小飛進頁首 logo（FLIP），同時遮罩淡出、hero 內容上浮（樣式在 Home.astro）
+    let flying = false;
+    let done = false;
+
+    const finish = () => {
+      if (done) return;
+      done = true;
+      root.classList.remove('intro');
+      intro.remove();
+      try {
+        sessionStorage.setItem('ct-intro', '1');
+      } catch {
+        // 無法寫入時下次照樣播放，不影響使用
+      }
+      // 等 hero 上浮的 transition 跑完再拿掉
+      setTimeout(() => root.classList.remove('intro-out'), 1500);
+    };
+
+    const fly = () => {
+      if (flying) return;
+      flying = true;
+      clearTimeout(autoFly);
+      skipEvents.forEach((type) => removeEventListener(type, fly));
+      steps.forEach((animation) => animation.finish());
+
+      root.classList.add('intro-out');
+      $('.intro-bg').animate([{ opacity: 1 }, { opacity: 0 }], { duration: 700, delay: 150, fill: 'forwards' });
+
+      const target = document.querySelector('.site-header .logo-mark');
+      const from = mark.getBoundingClientRect();
+      const to = target?.getBoundingClientRect();
+      const flight =
+        to && to.width > 0
+          ? mark.animate(
+              [
+                { transform: 'none' },
+                {
+                  transform: `translate(${to.left - from.left}px, ${to.top - from.top}px) scale(${to.width / from.width})`,
+                },
+              ],
+              { duration: 950, easing: 'cubic-bezier(0.7, 0, 0.2, 1)', fill: 'forwards' },
+            )
+          : mark.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 500, fill: 'forwards' });
+      flight.finished.then(finish, finish);
+    };
+
+    // 點擊、按鍵、滾動都直接跳到飛行階段
+    const skipEvents = ['pointerdown', 'keydown', 'wheel', 'touchmove'] as const;
+    skipEvents.forEach((type) => addEventListener(type, fly, { passive: true }));
+    const autoFly = setTimeout(fly, 3000);
+    setTimeout(finish, 7000);
+  }
+</script>

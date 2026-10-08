@@ -46,8 +46,8 @@ const en: Dictionary = {
     },
     story: {
       eyebrow: 'The name',
-      quote: 'Mr. Science',
-      body: 'In China’s May Fourth Movement of 1919, reformers nicknamed science 賽先生 — “Mr. Science”. We borrowed the name as a promise: bring the rigor of science and the patience of a good tutor to every student. Our English name, Cyber Tutor, echoes its sound — a tutor for the digital age.',
+      quote: 'Mr. Democracy and Mr. Science',
+      body: 'In China’s May Fourth Movement of 1919, reformers nicknamed democracy 德先生 — “Mr. Democracy” — and science 賽先生 — “Mr. Science”. We borrowed the latter as our name and as a promise: bring the rigor of science and the patience of a good tutor to every student. Our English name, Cyber Tutor, echoes its sound — a tutor for the digital age.',
     },
     audience: {
       eyebrow: 'Who we serve',
@@ -116,7 +116,7 @@ const en: Dictionary = {
     hero: {
       eyebrow: 'Products',
       title: 'From a single tap on a question to a whole class',
-      lead: 'Three products on one platform: students practise and read with PDF-Tutor, while teachers run classrooms, manage students, build exam banks and follow usage in the Teacher Console.',
+      lead: 'One platform, three parts: students practise and read with PDF-Tutor and the Reading Room, teachers run classrooms, manage students and follow usage in the Teacher Console, and administrators build the exam bank in the admin center.',
     },
     legend: {
       title: 'About beta features',
@@ -191,7 +191,7 @@ const en: Dictionary = {
     info: {
       eyebrow: 'Company',
       title: 'Company details',
-      lead: 'Write to us to confirm anything or to talk about working together.',
+      lead: 'Cyber Tutor is a brand operated by Counting Co. In our domain twctchem.com, “twct” stands for Taiwan Cyber Tutor. Write to us to confirm anything or to talk about working together.',
       rows: {
         name: 'Brand name',
         legalName: 'Registered company name',
@@ -302,11 +302,11 @@ const en: Dictionary = {
         blocks: [
           {
             subheading: '2.1 Website contact form',
-            text: 'When you fill in the contact form we collect what you choose to give us: your name, email, organization, role, product of interest, subject and message. We use it to reply to your enquiry, share product information and arrange demos or trials.',
+            text: 'When you fill in the contact form we collect what you choose to give us: your name, email, organization, role, product of interest, subject and message, and it is relayed to our inbox through the third-party form service Web3Forms. We use it to reply to your enquiry, share product information and arrange demos or trials.',
           },
           {
             subheading: '2.2 Browsing the website',
-            text: 'Our website currently uses no advertising or behavioural analytics tools and sets no tracking cookies. Our hosting provider may log basic connection data (such as IP address, browser type and access time) for operations and security.',
+            text: 'Our website currently uses no advertising or behavioural analytics tools and sets no tracking cookies. Our hosting provider may log basic connection data (such as IP address, browser type and access time) for operations and security. Our pages also load fonts from Google Fonts, so when you visit, your browser requests them from Google’s servers and Google receives your IP address and browser information.',
           },
           {
             subheading: '2.3 PDF-Tutor accounts and learning data (cloud version)',
@@ -329,7 +329,7 @@ const en: Dictionary = {
           {
             text: 'PDF-Tutor can be used in two ways:',
             items: [
-              'Standalone mode: homework and conversations stay in your own browser’s local storage and are not uploaded to our servers.',
+              'Standalone mode: homework and conversations stay in your own browser’s local storage and are not uploaded to our servers. AI features need your own AI service key (for example Google Gemini), and what you select goes straight from your browser to the AI service you configured, not through us.',
               'Cloud mode: homework, mistake notebook, learning profile and Reading Room data are stored in cloud storage so you can sync across devices after signing in. Each account’s data is isolated, and deleting a homework file deletes both the cloud and local copies.',
             ],
           },
@@ -364,7 +364,7 @@ const en: Dictionary = {
             items: [
               'Period: while the account exists, or as long as necessary to achieve the purpose of collection. When an account is deleted, its cloud data is deleted with it; contact-form data is kept for a reasonable period after your enquiry is handled.',
               'Area: where we operate and where our hosting, form and AI service providers operate, which may be outside Taiwan.',
-              'Recipients: us and the contractors who help us deliver the service (website hosting, form delivery, cloud storage and AI services). Admin access is limited to that organization’s administrators and, within the limits in section 5, the teacher of the student’s classroom. We do not sell your personal data.',
+              'Recipients: us and the contractors who help us deliver the service (website hosting, Google Fonts, Web3Forms form delivery, cloud storage and AI services). Admin access is limited to that organization’s administrators and, within the limits in section 5, the teacher of the student’s classroom. We do not sell your personal data.',
               'Methods: processed electronically and used only within the purposes above.',
             ],
           },
@@ -526,7 +526,7 @@ const en: Dictionary = {
         heading: '10. Governing law and jurisdiction',
         blocks: [
           {
-            text: 'These terms are governed by the laws of the Republic of China (Taiwan). Disputes arising from them shall be submitted to the court with jurisdiction over our place of business as the court of first instance.',
+            text: 'These terms are governed by the laws of the Republic of China (Taiwan). Disputes arising from them shall be submitted to a court of the Republic of China (Taiwan) with jurisdiction as the court of first instance.',
           },
         ],
       },

@@ -13,7 +13,9 @@ const t = useTranslations(lang);
 const f = t.contact.form;
 const status = t.contact.status;
 const days = { days: site.replyWithinDays };
-const roles = Object.values(f.roles);
+// 送出的值固定用英文，兩種語言收到的信才一致
+const en = useTranslations('en').contact.form;
+const roles = Object.entries(f.roles).map(([key, label]) => ({ value: en.roles[key as keyof typeof en.roles], label }));
 ---
 
 <form
@@ -56,7 +58,7 @@ const roles = Object.values(f.roles);
       <label for="cf-role">{f.role} <span class="req" aria-hidden="true">*</span></label>
       <select id="cf-role" name="role" required>
         <option value="">{f.rolePlaceholder}</option>
-        {roles.map((label) => <option value={label}>{label}</option>)}
+        {roles.map((role) => <option value={role.value}>{role.label}</option>)}
       </select>
     </div>
   </div>
@@ -64,8 +66,8 @@ const roles = Object.values(f.roles);
   <div class="field">
     <label for="cf-product">{f.product}</label>
     <select id="cf-product" name="product" data-product-select>
-      <option value={f.productGeneral} data-id="general">{f.productGeneral}</option>
-      {products.map((product) => <option value={product.name[lang]} data-id={product.id}>{product.name[lang]}</option>)}
+      <option value={en.productGeneral} data-id="general">{f.productGeneral}</option>
+      {products.map((product) => <option value={product.name.en} data-id={product.id}>{product.name[lang]}</option>)}
     </select>
   </div>
 

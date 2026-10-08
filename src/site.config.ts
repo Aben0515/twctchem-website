@@ -12,7 +12,7 @@ export const site = {
   /** 公司登記名稱：只放在隱私權政策、服務條款與關於我們的公司資訊表，不放在顯眼處 */
   legalName: {
     'zh-TW': '康庭有限公司',
-    en: 'Counting',
+    en: 'Counting Co.',
   },
   /** 統一編號；留空字串則全站不顯示 */
   taxId: '' as string,

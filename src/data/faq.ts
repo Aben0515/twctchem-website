@@ -90,11 +90,11 @@ export const faqs: FaqItem[] = [
     answer: {
       'zh-TW': [
         '閱讀室可以閱讀最大 300MB 的原文書 PDF，提供螢光筆、筆記、書籤與目錄，並可選字查詢、逐段對照翻譯，還能從閱讀內容產生測驗與生字複習卡。密碼保護的 PDF 暫不支援。',
-        '考古題題庫由教師發布，學生可依試卷與單元篩選，做整卷或單元練習，交卷後依官方答案自動計分。這兩項功能目前為 Beta 測試中。',
+        '考古題題庫由管理員發布，學生可依試卷與單元篩選，做整卷或單元練習，交卷後依官方答案自動計分。這兩項功能目前為 Beta 測試中。',
       ],
       en: [
         'The Reading Room lets you read textbook PDFs up to 300MB with highlights, notes, bookmarks and a table of contents, look up selected words, read side-by-side translations, and generate quizzes and vocabulary review cards from what you read. Password-protected PDFs are not supported yet.',
-        'The Exam Bank is published by teachers. Students filter papers by exam and topic, practise whole papers or single topics, and get automatic scoring against the official answers after submitting. Both are currently in beta.',
+        'The Exam Bank is published by administrators. Students filter papers by exam and topic, practise whole papers or single topics, and get automatic scoring against the official answers after submitting. Both are currently in beta.',
       ],
     },
   },
@@ -168,10 +168,10 @@ export const faqs: FaqItem[] = [
     },
     answer: {
       'zh-TW': [
-        '這取決於使用方式。單機模式下，所有作業與對話只存在使用者自己瀏覽器的本機儲存空間，不會上傳到我們的伺服器。雲端模式下，作業、錯題本與學習檔案會存放在雲端儲存空間，登入後可跨裝置同步；每個帳號的資料彼此隔離。',
+        '這取決於使用方式。單機模式下，所有作業與對話只存在使用者自己瀏覽器的本機儲存空間，不會上傳到我們的伺服器；但使用 AI 功能需要自備 AI 服務金鑰（例如 Google Gemini），選取的內容會由瀏覽器直接傳給你設定的 AI 服務。雲端模式下，作業、錯題本與學習檔案會存放在雲端儲存空間，登入後可跨裝置同步；每個帳號的資料彼此隔離。',
       ],
       en: [
-        'It depends how it is used. In standalone mode, homework and conversations stay in the user’s own browser storage and are never uploaded to our servers. In cloud mode, homework, the mistake notebook and the learning profile are kept in cloud storage and sync across devices after sign-in; each account’s data is isolated.',
+        'It depends how it is used. In standalone mode, homework and conversations stay in the user’s own browser storage and are never uploaded to our servers — but AI features need your own AI service key (for example Google Gemini), and what you select goes straight from your browser to the AI service you set up. In cloud mode, homework, the mistake notebook and the learning profile are kept in cloud storage and sync across devices after sign-in; each account’s data is isolated.',
       ],
     },
   },

@@ -26,6 +26,7 @@ const contactHref = localizePath(lang, `/contact/?product=${product.id}`);
     {product.subtitle && <p class="card-subtitle">{product.subtitle[lang]}</p>}
   </div>
   <p class="card-tagline">{product.tagline[lang]}</p>
+  {product.note && <p class="card-note">{product.note[lang]}</p>}
 
   <ul class="card-features" role="list">
     {
@@ -120,6 +121,11 @@ const contactHref = localizePath(lang, `/contact/?product=${product.id}`);
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem 1.25rem;
+  }
+
+  .card-note {
+    font-size: var(--fs-14);
+    color: var(--ink-muted);
   }
 
   .card-tagline {

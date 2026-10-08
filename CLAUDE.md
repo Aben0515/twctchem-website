@@ -1,6 +1,6 @@
 # twctchem.com 公司官網
 
-Astro 靜態網站，push 到 GitHub `main` 後由 GitHub Actions（`.github/workflows/deploy.yml`）自動部署到 GitHub Pages。中英雙語：繁中在 `/`，英文在 `/en/`。風格是「暖色人文」。
+Astro 靜態網站，push 到 GitHub `main` 後由 GitHub Actions（`.github/workflows/deploy.yml`）自動部署到 GitHub Pages。中英雙語：英文是預設語言，在 `/`；繁中在 `/zh/`。舊的 `/en/...` 網址由 `astro.config.mjs` 的 `redirects` 轉回根目錄。風格是「暖色人文」。
 
 ## 指令
 - `npm run dev`：開發伺服器，網址 http://localhost:4321
@@ -10,8 +10,9 @@ Astro 靜態網站，push 到 GitHub `main` 後由 GitHub Actions（`.github/wor
 ## 架構慣例（新增頁面時務必遵守）
 - **頁面拆成兩層**
   - `src/views/Xxx.astro` 放實際內容，接收 `lang` prop
-  - `src/pages/xxx.astro` 和 `src/pages/en/xxx.astro` 只放一行 `<Xxx lang="zh-TW" />` 或 `<Xxx lang="en" />`
-  - 範例：`src/views/Home.astro`，對應 `src/pages/index.astro` 和 `src/pages/en/index.astro`
+  - `src/pages/xxx.astro`（英文）和 `src/pages/zh/xxx.astro`（中文）只放一行 `<Xxx lang="en" />` 或 `<Xxx lang="zh-TW" />`
+  - 範例：`src/views/Home.astro`，對應 `src/pages/index.astro` 和 `src/pages/zh/index.astro`
+  - `astro.config.mjs` 的 `legacyEnglish` 只列改版前就有 `/en/xxx/` 網址的頁面，新頁面不用加
 - **文案**
   - 全部放在 `src/i18n/zh-TW.ts`，英文放在 `src/i18n/en.ts`
   - `en.ts` 的型別是 `Dictionary`，所以兩邊的 key 必須一致
@@ -48,10 +49,10 @@ Astro 靜態網站，push 到 GitHub `main` 後由 GitHub Actions（`.github/wor
 - FAQ 資料在 `src/data/faq.ts`；法律頁條文在 `i18n` 的 `privacy` / `terms`，由 `LegalLayout.astro` 渲染，條文裡的 `{company}`、`{email}` 會自動代入，最後更新日期在 `site.config.ts` 的 `legalUpdated`
 - 文案裡的 `{days}` 等佔位字串用 `fill()`（`i18n/utils.ts`）代入
 - 聯絡表單是 `ContactForm.astro`，用 Web3Forms 寄到 sales@twctchem.com（key 在 `site.config.ts`）
-- 404 同時有 `src/pages/404.astro` 與 `src/pages/en/404.astro`（GitHub Pages 只會用 `/404.html`，所以頁面上同時顯示兩種語言）
+- 404 同時有 `src/pages/404.astro`（英文）與 `src/pages/zh/404.astro`（GitHub Pages 只會用 `/404.html`，所以頁面上同時顯示兩種語言）
 
 待完成：
 1. 隱私權政策、服務條款（公司目前沒有法務，頁面已不標註「請法務確認」；上線前由負責人逐條對照實際營運情形確認）
 2. 部署後實際送出一次聯絡表單，確認 sales@twctchem.com 收得到
 
-已驗證（2026-10-09，Lighthouse 12.8）：無障礙 100、最佳做法 100、SEO 100（首頁、產品、FAQ、關於、聯絡）。效能以實際瀏覽器量測為準：首次繪製約 0.35 秒；Lighthouse 模擬的手機分數浮動很大，主因是約 2.5MB 的中文網路字體
+已驗證（2026-10-09，Lighthouse 12.8）：無障礙 100、最佳做法 100、SEO 100（首頁、產品、FAQ、關於、聯絡）。效能：線上實測電腦版首次繪製約 0.7 秒。Lighthouse 模擬手機的分數偏低（約 55–70），主因是約 2MB 的中文網路字體；負責人決定不處理手機效能，不要為此更換字體

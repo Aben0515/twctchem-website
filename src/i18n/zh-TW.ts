@@ -35,12 +35,17 @@ const zh = {
   home: {
     hero: {
       eyebrow: '教育科技',
-      title: '讓每一份教材，<br />都成為學生的<span class="nw"><em>專屬家教</em>。</span>',
+      tagline: '讓每一份教材，<br />都成為學生的<span class="nw"><em>專屬家教</em>。</span>',
       lead: '我們為學校、教師與學生打造 AI 學習工具。從點一下題目就能講解的 PDF-Tutor，到建置題庫、管理學生的教師後台，讓教與學都更專注在真正重要的事。',
       primary: '了解產品',
       secondary: '聯絡我們',
       note: '合作洽詢',
       illustrationLabel: 'PDF-Tutor 操作演示：點選作業上的題目後，AI 家教以提示模式逐步講解',
+    },
+    story: {
+      eyebrow: '名字的由來',
+      quote: '德先生與賽先生',
+      body: '1919 年五四運動時，人們以「德先生」稱民主（Democracy），以「賽先生」稱科學（Science）。我們沿用這個名字，期許用科學的方法，當一位隨時陪在學生身邊的好老師；英文名 Cyber Tutor 也取了「賽」的諧音，意思是數位時代的家教。',
     },
     audience: {
       eyebrow: '服務對象',

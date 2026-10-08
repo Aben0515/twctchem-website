@@ -37,12 +37,17 @@ const en: Dictionary = {
   home: {
     hero: {
       eyebrow: 'Education Technology',
-      title: 'Turn every textbook<br />into a <span class="nw"><em>personal tutor</em>.</span>',
+      tagline: 'Turn every textbook<br />into a <span class="nw"><em>personal tutor</em>.</span>',
       lead: 'We build AI learning tools for schools, teachers and students. From PDF-Tutor, which explains any homework question with a tap, to Teacher Console for building exam banks and managing students, we help teaching and learning focus on what matters.',
       primary: 'Explore products',
       secondary: 'Contact us',
       note: 'Partnerships',
       illustrationLabel: 'PDF-Tutor demo: tapping a homework question and getting step-by-step hints from the AI tutor',
+    },
+    story: {
+      eyebrow: 'The name',
+      quote: 'Mr. Science',
+      body: 'In China’s May Fourth Movement of 1919, reformers nicknamed science 賽先生 — “Mr. Science”. We borrowed the name as a promise: bring the rigor of science and the patience of a good tutor to every student. Our English name, Cyber Tutor, echoes its sound — a tutor for the digital age.',
     },
     audience: {
       eyebrow: 'Who we serve',

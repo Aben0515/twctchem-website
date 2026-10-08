@@ -17,16 +17,21 @@ interface Props {
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 const home = t.home;
+const otherLang: Lang = lang === 'en' ? 'zh-TW' : 'en';
 ---
 
 <BaseLayout lang={lang}>
-  <!-- Hero -->
+  <!-- Hero：品牌字標當主標題，標語當副標 -->
   <section class="hero">
     <div class="hero-lines" aria-hidden="true"></div>
     <div class="container hero-grid">
       <div class="hero-copy">
         <p class="eyebrow">{home.hero.eyebrow}</p>
-        <h1 set:html={home.hero.title} />
+        <h1 class="brand-title">
+          <span class="brand-primary">{site.name[lang]}</span>
+          <span class="brand-secondary" lang={otherLang}>{site.name[otherLang]}</span>
+        </h1>
+        <p class="hero-tagline" set:html={home.hero.tagline} />
         <p class="lead">{home.hero.lead}</p>
         <div class="hero-actions">
           <a class="btn btn--primary" href={localizePath(lang, '/products/')}>
@@ -46,8 +51,18 @@ const home = t.home;
     </div>
   </section>
 
+  <!-- 名字的由來：hero 與內容之間的停頓點 -->
+  <section class="story">
+    <div class="container story-inner" data-reveal>
+      <span class="story-ornament" aria-hidden="true"><i></i></span>
+      <p class="eyebrow">{home.story.eyebrow}</p>
+      <p class="story-quote">{home.story.quote}</p>
+      <p class="story-body">{home.story.body}</p>
+    </div>
+  </section>
+
   <!-- 服務對象 -->
-  <section class="section section--surface">
+  <section class="section section--audience">
     <div class="container">
       <SectionHeading eyebrow={home.audience.eyebrow} title={home.audience.title} lead={home.audience.lead} />
       <ul class="audience-grid" role="list">
@@ -67,7 +82,7 @@ const home = t.home;
   </section>
 
   <!-- 產品 -->
-  <section class="section section--alt">
+  <section class="section section--products">
     <div class="container">
       <div class="heading-row">
         <SectionHeading eyebrow={home.products.eyebrow} title={home.products.title} lead={home.products.lead} />
@@ -100,7 +115,7 @@ const home = t.home;
   </section>
 
   <!-- 為什麼選擇我們 -->
-  <section class="section">
+  <section class="section section--why">
     <div class="container">
       <SectionHeading eyebrow={home.why.eyebrow} title={home.why.title} />
       <ol class="why-grid" role="list">
@@ -133,7 +148,7 @@ const home = t.home;
   .hero {
     position: relative;
     overflow: hidden;
-    padding-block: clamp(3rem, 2rem + 4vw, 6rem) clamp(4rem, 3rem + 4vw, 7rem);
+    padding-block: clamp(3rem, 2rem + 4vw, 6rem) clamp(2.5rem, 2rem + 2vw, 4.5rem);
   }
 
   /* 像筆記本橫線的淡背景，往外漸隱 */
@@ -159,16 +174,66 @@ const home = t.home;
     gap: 1.5rem;
   }
 
-  .hero-copy h1 {
-    max-width: 14em;
-    font-size: clamp(2.25rem, 1.4rem + 2.6vw, 3.5rem);
+  /* 品牌字標：主語言名稱大字，另一語言名稱小字 */
+  .brand-title {
+    display: grid;
+    gap: 0.9rem;
+    margin-top: 0.25rem;
   }
 
-  .hero-copy h1 :global(.nw) {
+  .brand-primary {
+    font-size: clamp(3.25rem, 2rem + 5vw, 6rem);
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: 0.06em;
+    color: var(--ink);
+  }
+
+  :lang(en) .brand-primary {
+    letter-spacing: -0.02em;
+  }
+
+  .brand-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--font-sans);
+    font-size: var(--fs-14);
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--accent-strong);
+  }
+
+  .brand-secondary::before {
+    content: '';
+    width: 1.75rem;
+    height: 1px;
+    background: currentColor;
+  }
+
+  .hero-tagline {
+    max-width: 16em;
+    margin-top: 0.5rem;
+    font-family: var(--font-serif);
+    font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2.25rem);
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+
+  :lang(en) .hero-tagline {
+    letter-spacing: -0.01em;
+  }
+
+  .hero-tagline :global(.nw) {
     white-space: nowrap;
   }
 
-  .hero-copy h1 :global(em) {
+  .hero-tagline :global(em) {
     font-style: normal;
     color: var(--primary);
     background-image: linear-gradient(transparent 68%, rgb(217 119 87 / 0.3) 68%, rgb(217 119 87 / 0.3) 92%, transparent 92%);
@@ -235,7 +300,79 @@ const home = t.home;
     }
   }
 
+  /* ---------- 名字的由來 ---------- */
+  .story {
+    padding-block: clamp(2rem, 1.5rem + 2vw, 3.5rem) clamp(3rem, 2rem + 3vw, 5rem);
+  }
+
+  .story-inner {
+    display: grid;
+    justify-items: center;
+    gap: 1rem;
+    max-width: calc(40rem + var(--gutter) * 2);
+    text-align: center;
+  }
+
+  /* 細線、陶土橘小圓點、細線 */
+  .story-ornament {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .story-ornament::before,
+  .story-ornament::after {
+    content: '';
+    width: 3.5rem;
+    height: 1px;
+    background: var(--line-strong);
+  }
+
+  .story-ornament i {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  /* 置中的 eyebrow 不需要前導線 */
+  .story-inner .eyebrow::before {
+    display: none;
+  }
+
+  .story-quote {
+    font-family: var(--font-serif);
+    font-size: clamp(var(--fs-28), 1.3rem + 1.6vw, 2.5rem);
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: 0.08em;
+    color: var(--primary);
+  }
+
+  :lang(en) .story-quote {
+    letter-spacing: 0;
+    font-style: italic;
+  }
+
+  .story-body {
+    font-size: var(--fs-18);
+    line-height: 1.85;
+    color: var(--ink-muted);
+    text-wrap: pretty;
+  }
+
   /* ---------- 服務對象 ---------- */
+  /* 上下以漸層融入相鄰區塊，不切硬邊 */
+  .section--audience {
+    background: linear-gradient(
+      var(--bg),
+      var(--surface) 8rem,
+      var(--surface) calc(100% - 8rem),
+      var(--bg-alt)
+    );
+  }
+
   .audience-grid {
     display: grid;
     gap: 1.25rem;
@@ -274,6 +411,17 @@ const home = t.home;
   }
 
   /* ---------- 產品 ---------- */
+  /* 底部漸層回到米白，接上「我們的堅持」 */
+  .section--products {
+    padding-top: clamp(3rem, 2rem + 3vw, 5rem);
+    background: linear-gradient(var(--bg-alt), var(--bg-alt) calc(100% - 8rem), var(--bg));
+  }
+
+  /* 漸層已經提供過渡，上方不再疊一整段留白 */
+  .section--why {
+    padding-top: clamp(1.5rem, 1rem + 2vw, 3rem);
+  }
+
   .heading-row {
     display: flex;
     flex-wrap: wrap;

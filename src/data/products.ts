@@ -50,7 +50,7 @@ export const products: Product[] = [
     status: 'live',
     icon: 'document',
     url: 'https://pdf-tutor.pdf-tutor.workers.dev/',
-    demoVideo: { 'zh-TW': '/videos/pdf-tutor-demo.zh-TW.mp4', en: null },
+    demoVideo: { 'zh-TW': '/videos/pdf-tutor-demo.zh-TW.mp4', en: '/videos/pdf-tutor-demo.en.mp4' },
     note: {
       'zh-TW': '雲端版需要邀請碼才能建立帳號，請向學校或管理員索取，或來信洽詢。',
       en: 'The cloud version needs an invite code to create an account — ask your school or administrator, or write to us.',

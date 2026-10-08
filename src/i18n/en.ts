@@ -188,7 +188,8 @@ const en: Dictionary = {
       title: 'Company details',
       lead: 'Write to us to confirm anything or to talk about working together.',
       rows: {
-        name: 'Company name',
+        name: 'Brand name',
+        legalName: 'Registered company name',
         taxId: 'Tax ID',
         founded: 'Founded',
         email: 'Email',
@@ -278,10 +279,10 @@ const en: Dictionary = {
   privacy: {
     meta: {
       title: 'Privacy Policy',
-      description: 'How {company} collects, processes and uses personal data on its website and in products such as PDF-Tutor, and your rights under Taiwan’s Personal Data Protection Act.',
+      description: 'How {brand} collects, processes and uses personal data on its website and in products such as PDF-Tutor, and your rights under Taiwan’s Personal Data Protection Act.',
     },
     title: 'Privacy Policy',
-    lead: 'We care about your privacy and your students’. Under Taiwan’s Personal Data Protection Act, this policy explains how {company} (“we”) collects, processes and uses personal data on our website and in our products.',
+    lead: 'We care about your privacy and your students’. Under Taiwan’s Personal Data Protection Act, this policy explains how {company} (“we”, operating the {brand} brand) collects, processes and uses personal data on our website and in our products.',
     sections: [
       {
         heading: '1. Scope',
@@ -427,10 +428,10 @@ const en: Dictionary = {
   terms: {
     meta: {
       title: 'Terms of Service',
-      description: 'Please read these terms before using the {company} website and products such as PDF-Tutor.',
+      description: 'Please read these terms before using the {brand} website and products such as PDF-Tutor.',
     },
     title: 'Terms of Service',
-    lead: 'Welcome to the website and products of {company} (“we”). Please read these terms before you start; using the service means you agree to them.',
+    lead: 'Welcome to the website and products of {company} (“we”, operating the {brand} brand). Please read these terms before you start; using the service means you agree to them.',
     sections: [
       {
         heading: '1. Accepting these terms',

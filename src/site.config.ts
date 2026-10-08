@@ -8,12 +8,18 @@ export const site = {
   shortName: 'TWCT',
   /** 公司正式名稱 */
   name: {
-    'zh-TW': '【公司正式名稱】',
-    en: '[Company Legal Name]',
+    'zh-TW': '賽先生',
+    en: 'Cyber Tutor',
+  },
+  /** 公司登記名稱：只放在隱私權政策、服務條款與關於我們的公司資訊表，不放在顯眼處 */
+  legalName: {
+    'zh-TW': '康庭有限公司',
+    en: 'Counting',
   },
   /** 統一編號；留空字串則全站不顯示 */
   taxId: '' as string,
-  founded: '【成立年份】',
+  /** 留空字串則不顯示 */
+  founded: '',
   email: 'sales@twctchem.com',
   /** 留空字串則不顯示 */
   phone: '',

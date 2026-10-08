@@ -19,8 +19,9 @@ const rows = about.info.rows;
 // 統編、電話與地址留空時不顯示
 const infoRows = [
   { label: rows.name, value: site.name[lang] },
+  { label: rows.legalName, value: site.legalName[lang] },
   site.taxId && { label: rows.taxId, value: site.taxId },
-  { label: rows.founded, value: site.founded },
+  site.founded && { label: rows.founded, value: site.founded },
   { label: rows.email, value: site.email, href: `mailto:${site.email}` },
   site.phone && { label: rows.phone, value: site.phone, href: `tel:${site.phone.replace(/[^\d+]/g, '')}` },
   site.address[lang] && { label: rows.address, value: site.address[lang] },

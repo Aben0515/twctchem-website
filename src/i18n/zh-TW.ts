@@ -186,7 +186,8 @@ const zh = {
       title: '基本資料',
       lead: '歡迎來信確認任何資訊，或洽詢合作。',
       rows: {
-        name: '公司名稱',
+        name: '品牌名稱',
+        legalName: '公司登記名稱',
         taxId: '統一編號',
         founded: '成立年份',
         email: '聯絡信箱',
@@ -276,10 +277,10 @@ const zh = {
   privacy: {
     meta: {
       title: '隱私權政策',
-      description: '說明 {company} 官網與 PDF-Tutor 等產品如何蒐集、處理與利用個人資料，以及你依《個人資料保護法》享有的權利。',
+      description: '說明 {brand} 官網與 PDF-Tutor 等產品如何蒐集、處理與利用個人資料，以及你依《個人資料保護法》享有的權利。',
     },
     title: '隱私權政策',
-    lead: '我們重視你與學生的隱私。本政策依據中華民國《個人資料保護法》，說明 {company}（下稱「本公司」）在官網與產品中如何蒐集、處理及利用個人資料。',
+    lead: '我們重視你與學生的隱私。本政策依據中華民國《個人資料保護法》，說明 {company}（下稱「本公司」，經營「{brand}」品牌）在官網與產品中如何蒐集、處理及利用個人資料。',
     sections: [
       {
         heading: '一、適用範圍',
@@ -419,10 +420,10 @@ const zh = {
   terms: {
     meta: {
       title: '服務條款',
-      description: '使用 {company} 官網及 PDF-Tutor 等產品前，請先閱讀本服務條款。',
+      description: '使用 {brand} 官網及 PDF-Tutor 等產品前，請先閱讀本服務條款。',
     },
     title: '服務條款',
-    lead: '歡迎使用 {company}（下稱「本公司」）的官網與產品。使用前請先閱讀以下條款；開始使用即表示你同意這些條款。',
+    lead: '歡迎使用 {company}（下稱「本公司」，經營「{brand}」品牌）的官網與產品。使用前請先閱讀以下條款；開始使用即表示你同意這些條款。',
     sections: [
       {
         heading: '一、接受條款',

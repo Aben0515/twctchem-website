@@ -26,7 +26,7 @@ interface Props {
 const { lang, title, lead, description, sections } = Astro.props;
 const t = useTranslations(lang);
 
-const vars = { company: site.name[lang], email: site.email };
+const vars = { company: site.legalName[lang], brand: site.name[lang], email: site.email };
 const f = (text: string) => fill(text, vars);
 ---
 

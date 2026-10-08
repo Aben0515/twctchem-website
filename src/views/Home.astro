@@ -1,0 +1,379 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import ProductCard from '../components/ProductCard.astro';
+import CTABanner from '../components/CTABanner.astro';
+import HeroDemo from '../components/HeroDemo.astro';
+import type { IconName } from '../components/icons';
+import { products } from '../data/products';
+import { site } from '../site.config';
+import { type Lang, localizePath, useTranslations } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const home = t.home;
+---
+
+<BaseLayout lang={lang}>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-lines" aria-hidden="true"></div>
+    <div class="container hero-grid">
+      <div class="hero-copy" data-reveal>
+        <p class="eyebrow">{home.hero.eyebrow}</p>
+        <h1 set:html={home.hero.title} />
+        <p class="lead">{home.hero.lead}</p>
+        <div class="hero-actions">
+          <a class="btn btn--primary" href={localizePath(lang, '/products/')}>
+            {home.hero.primary}
+            <Icon name="arrow" size={18} />
+          </a>
+          <a class="btn btn--secondary" href={localizePath(lang, '/contact/')}>{home.hero.secondary}</a>
+        </div>
+        <p class="hero-note">
+          <span>{home.hero.note}</span>
+          <a href={`mailto:${site.email}`}>{site.email}</a>
+        </p>
+      </div>
+      <div class="hero-art" data-reveal style="--reveal-delay: 0.15s">
+        <HeroDemo lang={lang} label={home.hero.illustrationLabel} />
+      </div>
+    </div>
+  </section>
+
+  <!-- 服務對象 -->
+  <section class="section section--surface">
+    <div class="container">
+      <SectionHeading eyebrow={home.audience.eyebrow} title={home.audience.title} lead={home.audience.lead} />
+      <ul class="audience-grid" role="list">
+        {
+          home.audience.items.map((item, index) => (
+            <li class="audience-card" data-reveal style={`--reveal-delay: ${index * 0.08}s`}>
+              <span class="audience-icon">
+                <Icon name={item.icon as IconName} size={26} />
+              </span>
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- 產品 -->
+  <section class="section section--alt">
+    <div class="container">
+      <div class="heading-row">
+        <SectionHeading eyebrow={home.products.eyebrow} title={home.products.title} lead={home.products.lead} />
+        <a class="link-arrow heading-link" href={localizePath(lang, '/products/')}>
+          {home.products.viewAll}
+          <Icon name="arrow" size={18} />
+        </a>
+      </div>
+      <ul class="product-grid" role="list">
+        {
+          products.map((product, index) => (
+            <li data-reveal style={`--reveal-delay: ${index * 0.08}s`}>
+              <ProductCard product={product} lang={lang} />
+            </li>
+          ))
+        }
+        <li data-reveal style={`--reveal-delay: ${products.length * 0.08}s`}>
+          <div class="more-card">
+            <span class="more-icon"><Icon name="sparkle" size={26} /></span>
+            <h3>{home.products.moreTitle}</h3>
+            <p>{home.products.moreBody}</p>
+            <a class="link-arrow" href={localizePath(lang, '/contact/')}>
+              {home.products.moreCta}
+              <Icon name="arrow" size={18} />
+            </a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 為什麼選擇我們 -->
+  <section class="section">
+    <div class="container">
+      <SectionHeading eyebrow={home.why.eyebrow} title={home.why.title} />
+      <ol class="why-grid" role="list">
+        {
+          home.why.items.map((item, index) => (
+            <li class="why-item" data-reveal style={`--reveal-delay: ${index * 0.08}s`}>
+              <span class="why-number" aria-hidden="true">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <CTABanner
+    title={home.cta.title}
+    body={home.cta.body}
+    buttonLabel={home.cta.button}
+    href={localizePath(lang, '/contact/')}
+    email={site.email}
+  />
+</BaseLayout>
+
+<style>
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(3rem, 2rem + 4vw, 6rem) clamp(4rem, 3rem + 4vw, 7rem);
+  }
+
+  /* 像筆記本橫線的淡背景，往外漸隱 */
+  .hero-lines {
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(to bottom, transparent 0 39px, rgb(214 206 191 / 0.45) 39px 40px);
+    mask-image: radial-gradient(ellipse 70% 70% at 70% 45%, #000 10%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 70% at 70% 45%, #000 10%, transparent 75%);
+    pointer-events: none;
+  }
+
+  .hero-grid {
+    position: relative;
+    display: grid;
+    gap: 3rem;
+    align-items: center;
+  }
+
+  .hero-copy {
+    display: grid;
+    justify-items: start;
+    gap: 1.5rem;
+  }
+
+  .hero-copy h1 {
+    max-width: 14em;
+    font-size: clamp(2.25rem, 1.4rem + 2.6vw, 3.5rem);
+  }
+
+  .hero-copy h1 :global(.nw) {
+    white-space: nowrap;
+  }
+
+  .hero-copy h1 :global(em) {
+    font-style: normal;
+    color: var(--primary);
+    background-image: linear-gradient(transparent 68%, rgb(217 119 87 / 0.3) 68%, rgb(217 119 87 / 0.3) 92%, transparent 92%);
+    padding-inline: 0.06em;
+  }
+
+  .hero-copy .lead {
+    max-width: 34rem;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  .hero-note {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 0.75rem;
+    font-size: var(--fs-14);
+    color: var(--ink-subtle);
+  }
+
+  .hero-note span::after {
+    content: '';
+    display: inline-block;
+    width: 1px;
+    height: 0.9em;
+    margin-left: 0.75rem;
+    vertical-align: -0.1em;
+    background: var(--line-strong);
+  }
+
+  .hero-note a {
+    color: var(--ink-muted);
+    border-bottom: 1px solid var(--line-strong);
+    transition:
+      color 0.2s var(--ease),
+      border-color 0.2s var(--ease);
+  }
+
+  .hero-note a:hover {
+    color: var(--primary);
+    border-bottom-color: currentColor;
+  }
+
+  .hero-art {
+    width: min(100%, 560px);
+    justify-self: center;
+  }
+
+  @media (min-width: 960px) {
+    .hero-grid {
+      grid-template-columns: 1.05fr 1fr;
+      gap: 2rem;
+    }
+
+    .hero-art {
+      justify-self: end;
+      margin-right: -1rem;
+    }
+  }
+
+  /* ---------- 服務對象 ---------- */
+  .audience-grid {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .audience-card {
+    display: grid;
+    align-content: start;
+    gap: 0.75rem;
+    padding: 2rem 1.75rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--bg);
+  }
+
+  .audience-icon {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    margin-bottom: 0.5rem;
+    border-radius: 14px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    color: var(--primary);
+  }
+
+  .audience-card p {
+    color: var(--ink-muted);
+  }
+
+  @media (min-width: 768px) {
+    .audience-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  /* ---------- 產品 ---------- */
+  .heading-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 0 2rem;
+  }
+
+  .heading-link {
+    margin-bottom: clamp(2.5rem, 2rem + 2vw, 3.5rem);
+  }
+
+  .product-grid {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .product-grid > li {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .more-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    height: 100%;
+    padding: clamp(1.5rem, 1.2rem + 1vw, 2.25rem);
+    border: 1.5px dashed var(--line-strong);
+    border-radius: var(--radius-lg);
+    background: transparent;
+  }
+
+  .more-icon {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    margin-bottom: 0.5rem;
+    border-radius: 14px;
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+  }
+
+  .more-card h3 {
+    font-size: var(--fs-28);
+  }
+
+  .more-card p {
+    color: var(--ink-muted);
+  }
+
+  .more-card .link-arrow {
+    margin-top: auto;
+  }
+
+  @media (min-width: 768px) {
+    .product-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  /* 落單的最後一張卡片佔滿整列 */
+  @media (min-width: 768px) {
+    .product-grid > li:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  /* ---------- 為什麼選擇我們 ---------- */
+  .why-grid {
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  .why-item {
+    display: grid;
+    align-content: start;
+    gap: 0.75rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--line-strong);
+  }
+
+  .why-number {
+    font-family: var(--font-serif);
+    font-size: var(--fs-36);
+    font-weight: 500;
+    line-height: 1;
+    color: var(--accent);
+  }
+
+  .why-item p {
+    color: var(--ink-muted);
+  }
+
+  @media (min-width: 768px) {
+    .why-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 3rem;
+    }
+  }
+</style>

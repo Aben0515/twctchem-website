@@ -1,0 +1,217 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import CTABanner from '../components/CTABanner.astro';
+import Icon from '../components/Icon.astro';
+import type { IconName } from '../components/icons';
+import { site } from '../site.config';
+import { type Lang, localizePath, useTranslations } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const about = t.about;
+const rows = about.info.rows;
+
+// 電話與地址留空時不顯示
+const infoRows = [
+  { label: rows.name, value: site.name[lang] },
+  { label: rows.taxId, value: site.taxId },
+  { label: rows.founded, value: site.founded },
+  { label: rows.email, value: site.email, href: `mailto:${site.email}` },
+  site.phone && { label: rows.phone, value: site.phone, href: `tel:${site.phone.replace(/[^\d+]/g, '')}` },
+  site.address[lang] && { label: rows.address, value: site.address[lang] },
+].filter((row): row is { label: string; value: string; href?: string } => Boolean(row));
+---
+
+<BaseLayout lang={lang} title={about.meta.title} description={about.meta.description}>
+  <section class="section section--page">
+    <div class="container">
+      <SectionHeading as="h1" eyebrow={about.hero.eyebrow} title={about.hero.title} lead={about.hero.lead} />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container statement-grid">
+      <article class="statement" data-reveal>
+        <p class="eyebrow">{about.mission.eyebrow}</p>
+        <h2>{about.mission.title}</h2>
+        <p>{about.mission.body}</p>
+      </article>
+      <article class="statement" data-reveal style="--reveal-delay: 0.08s">
+        <p class="eyebrow">{about.vision.eyebrow}</p>
+        <h2>{about.vision.title}</h2>
+        <p>{about.vision.body}</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section section--surface">
+    <div class="container">
+      <SectionHeading eyebrow={about.values.eyebrow} title={about.values.title} />
+      <ul class="values-grid" role="list">
+        {
+          about.values.items.map((item, index) => (
+            <li class="value-card" data-reveal style={`--reveal-delay: ${index * 0.08}s`}>
+              <span class="value-icon">
+                <Icon name={item.icon as IconName} size={26} />
+              </span>
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container info-grid">
+      <SectionHeading eyebrow={about.info.eyebrow} title={about.info.title} lead={about.info.lead} />
+      <dl class="info-table" data-reveal>
+        {
+          infoRows.map((row) => (
+            <div class="info-row">
+              <dt>{row.label}</dt>
+              <dd>{row.href ? <a href={row.href}>{row.value}</a> : row.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <CTABanner
+    title={t.home.cta.title}
+    body={t.home.cta.body}
+    buttonLabel={t.home.cta.button}
+    href={localizePath(lang, '/contact/')}
+    email={site.email}
+  />
+</BaseLayout>
+
+<style>
+  .statement-grid {
+    display: grid;
+    gap: 3rem;
+  }
+
+  .statement {
+    display: grid;
+    align-content: start;
+    gap: 1rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--line-strong);
+  }
+
+  .statement p:last-child {
+    color: var(--ink-muted);
+    font-size: var(--fs-18);
+  }
+
+  @media (min-width: 768px) {
+    .statement-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 4rem;
+    }
+  }
+
+  .values-grid {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .value-card {
+    display: grid;
+    align-content: start;
+    gap: 0.75rem;
+    padding: 2rem 1.75rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--bg);
+  }
+
+  .value-icon {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    margin-bottom: 0.5rem;
+    border-radius: 14px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    color: var(--primary);
+  }
+
+  .value-card p {
+    color: var(--ink-muted);
+  }
+
+  @media (min-width: 768px) {
+    .values-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1100px) {
+    .values-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .info-grid {
+    display: grid;
+    gap: 0;
+  }
+
+  .info-table {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    overflow: hidden;
+  }
+
+  .info-row {
+    display: grid;
+    gap: 0.25rem;
+    padding: 1.1rem 1.5rem;
+  }
+
+  .info-row + .info-row {
+    border-top: 1px solid var(--line);
+  }
+
+  .info-row dt {
+    font-size: var(--fs-14);
+    font-weight: 500;
+    color: var(--ink-subtle);
+  }
+
+  .info-row dd {
+    overflow-wrap: anywhere;
+  }
+
+  .info-row a {
+    color: var(--primary);
+    border-bottom: 1px solid var(--line-strong);
+  }
+
+  @media (min-width: 640px) {
+    .info-row {
+      grid-template-columns: 11rem minmax(0, 1fr);
+      gap: 1.5rem;
+      align-items: baseline;
+    }
+  }
+
+  @media (min-width: 960px) {
+    .info-grid {
+      grid-template-columns: 1fr 1.2fr;
+      gap: 4rem;
+      align-items: start;
+    }
+  }
+</style>

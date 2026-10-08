@@ -1,0 +1,112 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../site.config';
+import { type Lang, localizePath, stripLangPrefix, useTranslations } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+  /** 頁面標題，不含公司名稱；首頁留空 */
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+}
+
+const { lang, title, description, noindex = false } = Astro.props;
+const t = useTranslations(lang);
+
+const siteName = site.name[lang];
+const fullTitle = title ? `${title}${t.meta.titleSeparator}${siteName}` : `${siteName}${t.meta.titleSeparator}${t.meta.tagline}`;
+const metaDescription = description ?? t.meta.description;
+
+const basePath = stripLangPrefix(Astro.url.pathname);
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const zhUrl = new URL(localizePath('zh-TW', basePath), Astro.site);
+const enUrl = new URL(localizePath('en', basePath), Astro.site);
+const ogImage = new URL('/og-image.png', Astro.site);
+const ogLocale = lang === 'en' ? 'en_US' : 'zh_TW';
+
+const organization = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: siteName,
+  url: site.url,
+  logo: new URL('/favicon.svg', site.url).href,
+  email: site.email,
+  contactPoint: {
+    '@type': 'ContactPoint',
+    email: site.email,
+    contactType: 'sales',
+    availableLanguage: ['zh-TW', 'en'],
+  },
+};
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={metaDescription} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="zh-TW" href={zhUrl} />
+    <link rel="alternate" hreflang="en" href={enUrl} />
+    <link rel="alternate" hreflang="x-default" href={zhUrl} />
+    {noindex && <meta name="robots" content="noindex" />}
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#FAF7F2" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={metaDescription} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content={ogLocale} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap"
+    />
+
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+    <script type="application/ld+json" set:html={JSON.stringify(organization)} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{t.nav.skip}</a>
+    <Header lang={lang} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+
+    <script>
+      const targets = document.querySelectorAll('[data-reveal]');
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+              }
+            }
+          },
+          { rootMargin: '0px 0px -8% 0px', threshold: 0.1 },
+        );
+        targets.forEach((el) => observer.observe(el));
+      } else {
+        targets.forEach((el) => el.classList.add('is-visible'));
+      }
+    </script>
+  </body>
+</html>

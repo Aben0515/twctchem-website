@@ -1,0 +1,164 @@
+---
+import Icon from './Icon.astro';
+import type { Product } from '../data/products';
+import { type Lang, localizePath, useTranslations } from '../i18n/utils';
+
+interface Props {
+  product: Product;
+  lang: Lang;
+  /** 標題層級，放在有 h2 的區塊內用 h3 */
+  headingLevel?: 'h2' | 'h3';
+}
+
+const { product, lang, headingLevel: Heading = 'h3' } = Astro.props;
+const t = useTranslations(lang);
+const contactHref = localizePath(lang, `/contact/?product=${product.id}`);
+---
+
+<article class="product-card" id={product.id}>
+  <div class="card-top">
+    <span class="card-icon"><Icon name={product.icon} size={26} /></span>
+    <span class={`badge badge--${product.status}`}>{t.product.status[product.status]}</span>
+  </div>
+
+  <div class="card-heading">
+    <Heading class="card-title">{product.name[lang]}</Heading>
+    {product.subtitle && <p class="card-subtitle">{product.subtitle[lang]}</p>}
+  </div>
+  <p class="card-tagline">{product.tagline[lang]}</p>
+
+  <ul class="card-features" role="list">
+    {
+      product.features[lang].map((feature) => (
+        <li>
+          <Icon name="check" size={18} strokeWidth={2} />
+          <span>{feature}</span>
+        </li>
+      ))
+    }
+  </ul>
+
+  <div class="card-footer">
+    <div class="card-audience">
+      <span class="sr-only">{t.product.audienceLabel}</span>
+      {product.audience.map((key) => <span class="tag">{t.audience[key]}</span>)}
+    </div>
+    <div class="card-links">
+      {
+        product.url && (
+          <a class="link-arrow" href={product.url} target="_blank" rel="noopener">
+            {t.product.open}
+            <Icon name="arrow" size={18} />
+          </a>
+        )
+      }
+      <a class="link-arrow" href={contactHref}>
+        {t.product.inquire}
+        <Icon name="arrow" size={18} />
+      </a>
+    </div>
+  </div>
+</article>
+
+<style>
+  .product-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    height: 100%;
+    padding: clamp(1.5rem, 1.2rem + 1vw, 2.25rem);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    transition:
+      box-shadow 0.3s var(--ease),
+      transform 0.3s var(--ease),
+      border-color 0.3s var(--ease);
+  }
+
+  .product-card:hover {
+    border-color: var(--line-strong);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-3px);
+  }
+
+  .card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+  }
+
+  .card-icon {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: var(--primary-soft);
+    color: var(--primary);
+  }
+
+  .card-heading {
+    display: grid;
+    gap: 0.125rem;
+  }
+
+  .card-title {
+    font-size: var(--fs-28);
+  }
+
+  .card-subtitle {
+    font-size: var(--fs-14);
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--accent-strong);
+  }
+
+  .card-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+  }
+
+  .card-tagline {
+    color: var(--ink-muted);
+  }
+
+  .card-features {
+    display: grid;
+    gap: 0.6rem;
+    padding-block: 1.25rem;
+    border-block: 1px solid var(--line);
+    font-size: 0.9375rem;
+  }
+
+  .card-features li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.625rem;
+    align-items: start;
+  }
+
+  .card-features :global(.icon) {
+    margin-top: 0.3em;
+    color: var(--accent);
+  }
+
+  .card-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: auto;
+    padding-top: 0.25rem;
+  }
+
+  .card-audience {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+  }
+</style>

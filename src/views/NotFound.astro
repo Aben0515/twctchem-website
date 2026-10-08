@@ -1,0 +1,84 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { type Lang, localizePath, useTranslations } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+// Vercel 只會用同一份 404.html 回應所有錯誤網址，所以同時顯示另一種語言
+const other: Lang = lang === 'en' ? 'zh-TW' : 'en';
+const t = useTranslations(lang);
+const o = useTranslations(other);
+---
+
+<BaseLayout lang={lang} title={t.notFound.meta.title} noindex>
+  <section class="section not-found">
+    <div class="container">
+      <div class="not-found-inner" data-reveal>
+        <p class="code" aria-hidden="true">{t.notFound.code}</p>
+        <h1>{t.notFound.title}</h1>
+        <p class="lead">{t.notFound.body}</p>
+        <div class="actions">
+          <a class="btn btn--primary" href={localizePath(lang, '/')}>
+            {t.notFound.home}
+            <Icon name="arrow" size={18} />
+          </a>
+          <a class="btn btn--secondary" href={localizePath(lang, '/products/')}>{t.notFound.products}</a>
+          <a class="btn btn--secondary" href={localizePath(lang, '/contact/')}>{t.notFound.contact}</a>
+        </div>
+
+        <p class="other-lang" lang={other}>
+          <span>{o.notFound.title}</span>
+          <a class="link-arrow" href={localizePath(other, '/')}>
+            {o.notFound.home}
+            <Icon name="arrow" size={18} />
+          </a>
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found {
+    display: grid;
+    min-height: 60vh;
+    align-items: center;
+  }
+
+  .not-found-inner {
+    display: grid;
+    justify-items: start;
+    gap: 1.25rem;
+    max-width: 38rem;
+  }
+
+  .code {
+    font-family: var(--font-serif);
+    font-size: clamp(5rem, 3rem + 10vw, 9rem);
+    font-weight: 500;
+    line-height: 1;
+    color: var(--accent);
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  .other-lang {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    font-size: var(--fs-14);
+    color: var(--ink-subtle);
+  }
+</style>

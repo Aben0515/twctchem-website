@@ -1,0 +1,13 @@
+---
+import LegalLayout from '../components/LegalLayout.astro';
+import { type Lang, useTranslations } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const page = useTranslations(lang).privacy;
+---
+
+<LegalLayout lang={lang} title={page.title} lead={page.lead} description={page.meta.description} sections={page.sections} />

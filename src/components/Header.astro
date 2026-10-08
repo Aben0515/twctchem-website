@@ -1,0 +1,264 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+import { type Lang, localizePath, stripLangPrefix, useTranslations } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const current = stripLangPrefix(Astro.url.pathname);
+
+const links = [
+  { href: '/products/', label: t.nav.products },
+  { href: '/about/', label: t.nav.about },
+  { href: '/faq/', label: t.nav.faq },
+];
+---
+
+<header class="site-header" data-header>
+  <div class="container header-inner">
+    <a class="brand" href={localizePath(lang, '/')} aria-label={t.nav.home}>
+      <Logo />
+    </a>
+
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-menu-toggle>
+      <span class="sr-only">{t.nav.menu}</span>
+      <span class="menu-icon menu-icon--open"><Icon name="menu" /></span>
+      <span class="menu-icon menu-icon--close"><Icon name="close" /></span>
+    </button>
+
+    <nav id="site-nav" class="site-nav" aria-label={t.nav.primary}>
+      <ul class="nav-links" role="list">
+        {
+          links.map((link) => (
+            <li>
+              <a href={localizePath(lang, link.href)} aria-current={current.startsWith(link.href) ? 'page' : undefined}>
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="nav-actions">
+        <LanguageSwitcher lang={lang} />
+        <a class="btn btn--primary btn--sm" href={localizePath(lang, '/contact/')}>{t.nav.contact}</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgb(250 247 242 / 0.86);
+    backdrop-filter: saturate(1.4) blur(12px);
+    -webkit-backdrop-filter: saturate(1.4) blur(12px);
+    border-bottom: 1px solid transparent;
+    transition:
+      border-color 0.3s var(--ease),
+      background-color 0.3s var(--ease);
+  }
+
+  .site-header.is-scrolled,
+  .site-header.is-open {
+    border-bottom-color: var(--line);
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--header-h);
+  }
+
+  .brand {
+    display: inline-flex;
+    border-radius: var(--radius-sm);
+  }
+
+  .site-nav {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  .nav-links a {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0.4rem 0.875rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--ink-muted);
+    transition: color 0.2s var(--ease);
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    left: 0.875rem;
+    right: 0.875rem;
+    bottom: 4px;
+    height: 1.5px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s var(--ease);
+  }
+
+  .nav-links a:hover,
+  .nav-links a[aria-current='page'] {
+    color: var(--ink);
+  }
+
+  .nav-links a:hover::after,
+  .nav-links a[aria-current='page']::after {
+    transform: scaleX(1);
+  }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .menu-toggle {
+    display: none;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    margin-right: -10px;
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .menu-icon--close {
+    display: none;
+  }
+
+  @media (max-width: 899px) {
+    .menu-toggle {
+      display: grid;
+    }
+
+    .menu-icon {
+      grid-area: 1 / 1;
+    }
+
+    .is-open .menu-icon--open {
+      display: none;
+    }
+
+    .is-open .menu-icon--close {
+      display: block;
+    }
+
+    .site-nav {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 1.5rem;
+      padding: 1rem var(--gutter) 1.75rem;
+      background: var(--bg);
+      border-bottom: 1px solid var(--line);
+      box-shadow: 0 24px 40px -24px rgb(28 28 26 / 0.18);
+      visibility: hidden;
+      opacity: 0;
+      transform: translateY(-8px);
+      transition:
+        opacity 0.25s var(--ease),
+        transform 0.25s var(--ease),
+        visibility 0s linear 0.25s;
+    }
+
+    .is-open .site-nav {
+      visibility: visible;
+      opacity: 1;
+      transform: none;
+      transition:
+        opacity 0.25s var(--ease),
+        transform 0.25s var(--ease);
+    }
+
+    .nav-links {
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .nav-links li + li {
+      border-top: 1px solid var(--line);
+    }
+
+    .nav-links a {
+      display: flex;
+      min-height: 52px;
+      padding-inline: 0;
+      font-size: var(--fs-18);
+      color: var(--ink);
+    }
+
+    .nav-links a::after {
+      display: none;
+    }
+
+    .nav-links a[aria-current='page'] {
+      color: var(--primary);
+    }
+
+    .nav-actions {
+      justify-content: space-between;
+    }
+
+    .nav-actions .btn {
+      flex: 1;
+      min-height: 48px;
+      font-size: var(--fs-16);
+    }
+  }
+</style>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+
+  if (header && toggle) {
+    const setOpen = (open: boolean) => {
+      header.classList.toggle('is-open', open);
+      toggle.setAttribute('aria-expanded', String(open));
+    };
+
+    toggle.addEventListener('click', () => setOpen(!header.classList.contains('is-open')));
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && header.classList.contains('is-open')) {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+
+    window.matchMedia('(min-width: 900px)').addEventListener('change', (event) => {
+      if (event.matches) setOpen(false);
+    });
+
+    const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 8);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+</script>

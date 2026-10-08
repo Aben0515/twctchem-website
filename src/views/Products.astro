@@ -1,0 +1,168 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import ProductCard from '../components/ProductCard.astro';
+import CTABanner from '../components/CTABanner.astro';
+import Icon from '../components/Icon.astro';
+import { products } from '../data/products';
+import { site } from '../site.config';
+import { type Lang, localizePath, useTranslations } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const page = t.productsPage;
+---
+
+<BaseLayout lang={lang} title={page.meta.title} description={page.meta.description}>
+  <section class="section section--page">
+    <div class="container">
+      <SectionHeading as="h1" eyebrow={page.hero.eyebrow} title={page.hero.title} lead={page.hero.lead} />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <ul class="product-grid" role="list">
+        {
+          products.map((product, index) => (
+            <li data-reveal style={`--reveal-delay: ${index * 0.08}s`}>
+              <ProductCard product={product} lang={lang} headingLevel="h2" />
+            </li>
+          ))
+        }
+      </ul>
+
+      <aside class="beta-note" data-reveal>
+        <Icon name="sparkle" size={22} />
+        <div>
+          <h2>{page.legend.title}</h2>
+          <p>{page.legend.body}</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section--surface">
+    <div class="container">
+      <SectionHeading eyebrow={page.how.eyebrow} title={page.how.title} lead={page.how.lead} />
+      <ol class="steps" role="list">
+        {
+          page.how.steps.map((step, index) => (
+            <li class="step" data-reveal style={`--reveal-delay: ${index * 0.08}s`}>
+              <span class="step-number" aria-hidden="true">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <h3>{step.title}</h3>
+              <p>{step.body}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <CTABanner
+    title={t.home.cta.title}
+    body={t.home.cta.body}
+    buttonLabel={t.home.cta.button}
+    href={localizePath(lang, '/contact/')}
+    email={site.email}
+  />
+</BaseLayout>
+
+<style>
+  .product-grid {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .product-grid > li {
+    display: flex;
+    flex-direction: column;
+  }
+
+  @media (min-width: 768px) {
+    .product-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    /* 落單的最後一張卡片佔滿整列 */
+    .product-grid > li:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (min-width: 1100px) {
+    .product-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .product-grid > li:last-child:nth-child(odd) {
+      grid-column: auto;
+    }
+  }
+
+  .beta-note {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    margin-top: 2rem;
+    padding: 1.25rem 1.5rem;
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--radius-lg);
+  }
+
+  .beta-note :global(.icon) {
+    flex: none;
+    margin-top: 0.2rem;
+    color: var(--accent-strong);
+  }
+
+  .beta-note h2 {
+    margin-bottom: 0.25rem;
+    font-family: var(--font-sans);
+    font-size: var(--fs-16);
+    font-weight: 600;
+  }
+
+  .beta-note p {
+    color: var(--ink-muted);
+    font-size: 0.9375rem;
+  }
+
+  .steps {
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  .step {
+    display: grid;
+    align-content: start;
+    gap: 0.75rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--line-strong);
+  }
+
+  .step-number {
+    font-family: var(--font-serif);
+    font-size: var(--fs-36);
+    font-weight: 500;
+    line-height: 1;
+    color: var(--accent);
+  }
+
+  .step p {
+    color: var(--ink-muted);
+  }
+
+  @media (min-width: 768px) {
+    .steps {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 3rem;
+    }
+  }
+</style>

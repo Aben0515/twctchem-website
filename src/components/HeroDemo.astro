@@ -1,0 +1,729 @@
+---
+/**
+ * 首頁 Hero 的 PDF-Tutor 演示動畫：游標點選題目 → 題目框亮起 → AI 以提示模式講解 → 按「寫出下一步」。
+ * 介面元素仿照 PDF-Tutor 實際畫面（題號圓點、選取框與左側色條、提示按鈕）。
+ * 沒有 JS 或使用者要求減少動態時，直接顯示最終畫面。
+ * 演示用文案只屬於這個元件，所以放在這裡，不放進 i18n 字典。
+ */
+import type { Lang, Localized } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+  label: string;
+}
+
+const { lang, label } = Astro.props;
+
+const copy: Localized<{
+  mode: string;
+  page: string;
+  questions: string[];
+  chatTitle: string;
+  chatMeta: string;
+  empty: string;
+  ask: string;
+  ai1: string[];
+  hint: string;
+  next: string;
+  ai2: string[];
+  input: string;
+}> = {
+  'zh-TW': {
+    mode: '提示模式',
+    page: '第 3 章　運動學　習題',
+    questions: [
+      '一車由靜止以 2 m/s² 等加速度行駛，求 5 秒後的速度。',
+      '一球以 20 m/s 鉛直上拋，求可到達的最大高度。（g = 10 m/s²）',
+      '承上題，求球回到拋出點所需的時間。',
+    ],
+    chatTitle: '第 2 題',
+    chatMeta: '第 1 頁',
+    empty: '點選左側題目，開始講解',
+    ask: '請講解這一題',
+    ai1: ['關鍵在最高點：那一瞬間，速度剛好是 0。', '試著把 v = 0、v₀ = 20 代入：'],
+    hint: '給我一點提示',
+    next: '寫出下一步',
+    ai2: ['0 = 20² − 2 × 10 × h', '所以最大高度 h = 20 m。'],
+    input: '繼續追問這一題…',
+  },
+  en: {
+    mode: 'Hint mode',
+    page: 'Chapter 3 · Kinematics · Exercises',
+    questions: [
+      'A car accelerates from rest at 2 m/s². Find its speed after 5 s.',
+      'A ball is thrown straight up at 20 m/s. Find its maximum height. (g = 10 m/s²)',
+      'Find the time for the ball to return to the launch point.',
+    ],
+    chatTitle: 'Question 2',
+    chatMeta: 'Page 1',
+    empty: 'Tap a question on the left to begin',
+    ask: 'Explain this question',
+    ai1: ['At the very top of the flight, the speed is exactly 0.', 'Try substituting v = 0 and v₀ = 20 into:'],
+    hint: 'Give me a hint',
+    next: 'Show next step',
+    ai2: ['0 = 20² − 2 × 10 × h', 'So the maximum height is h = 20 m.'],
+    input: 'Ask a follow-up…',
+  },
+};
+
+const c = copy[lang];
+---
+
+<div class="demo" data-demo role="img" aria-label={label}>
+  <div class="demo-orbit" aria-hidden="true"></div>
+
+  <div class="demo-window" aria-hidden="true">
+    <div class="demo-bar">
+      <span class="demo-dots"><i></i><i></i><i></i></span>
+      <span class="demo-app">PDF-Tutor</span>
+      <span class="demo-mode">{c.mode}</span>
+    </div>
+
+    <div class="demo-body">
+      <!-- 左：PDF 頁面 -->
+      <div class="demo-pdf" data-pdf>
+        <div class="demo-page">
+          <p class="demo-page-title">{c.page}</p>
+          {
+            c.questions.map((text, index) => (
+              <div class:list={['qbox', { 'is-selected': index === 1 }]} data-q={index + 1}>
+                <span class="qdot">{index + 1}</span>
+                <p>{text}</p>
+                {index === 1 && (
+                  <svg class="qfig" viewBox="0 0 40 48" aria-hidden="true">
+                    <path d="M4 44h32" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                    <circle cx="20" cy="36" r="5" fill="#D97757" />
+                    <path
+                      d="M20 28V8M14.5 13.5L20 8l5.5 5.5"
+                      fill="none"
+                      stroke="#1F4D3A"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                )}
+              </div>
+            ))
+          }
+          <div class="demo-lines">
+            <i></i><i></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右：講解面板 -->
+      <div class="demo-chat">
+        <div class="chat-head">
+          <span class="chat-empty is-off" data-empty>{c.empty}</span>
+          <span class="chat-title" data-head>
+            <strong>{c.chatTitle}</strong>
+            <span>{c.chatMeta}</span>
+          </span>
+        </div>
+
+        <div class="chat-msgs">
+          <div class="msg msg-user" data-step="user">
+            <span class="msg-thumb"><i></i><i></i></span>
+            <span>{c.ask}</span>
+          </div>
+          <div class="msg msg-ai" data-step="ai1">
+            <p data-stream>{c.ai1[0]}</p>
+            <p data-stream>{c.ai1[1]}</p>
+            <p class="formula" data-stream>v² = v₀² − 2gh</p>
+          </div>
+          <div class="msg msg-ai" data-step="ai2">
+            <p class="formula" data-stream>{c.ai2[0]}</p>
+            <p data-stream>{c.ai2[1]}</p>
+          </div>
+          <div class="msg msg-typing is-off" data-step="typing"><i></i><i></i><i></i></div>
+        </div>
+
+        <div class="chat-hints" data-step="hints">
+          <span class="hint-btn">{c.hint}</span>
+          <span class="hint-btn is-pressed" data-next>{c.next}</span>
+        </div>
+
+        <div class="chat-input">
+          <span>{c.input}</span>
+          <i class="send"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <span class="demo-cursor" data-cursor aria-hidden="true">
+    <svg viewBox="0 0 24 24" width="22" height="22">
+      <path
+        d="M5 3l14 7.5-6.2 1.6L10 18z"
+        fill="#1C1C1A"
+        stroke="#FFFFFF"
+        stroke-width="1.5"
+        stroke-linejoin="round"></path>
+    </svg>
+    <span class="demo-ripple"></span>
+  </span>
+</div>
+
+<style>
+  .demo {
+    position: relative;
+    container-type: inline-size;
+    padding: 6% 0;
+  }
+
+  /* 背景淡綠圓與虛線軌道，延續品牌插圖語言 */
+  .demo-orbit {
+    position: absolute;
+    inset: 0 -4% 0 8%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 50%, var(--primary-soft) 0 58%, transparent 58.5%);
+    pointer-events: none;
+  }
+
+  .demo-orbit::after {
+    content: '';
+    position: absolute;
+    inset: -6%;
+    border: 1px dashed var(--line-strong);
+    border-radius: 50%;
+  }
+
+  .demo-window {
+    position: relative;
+    overflow: hidden;
+    font-size: clamp(8.5px, 2.35cqi, 13.5px);
+    line-height: 1.55;
+    background: var(--surface);
+    border: 1px solid var(--line-strong);
+    border-radius: 14px;
+    box-shadow:
+      0 1px 2px rgb(28 28 26 / 0.05),
+      0 30px 60px -28px rgb(31 77 58 / 0.35);
+  }
+
+  /* ---------- 視窗標題列 ---------- */
+  .demo-bar {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    height: 2.7em;
+    padding: 0 1em;
+    background: var(--bg-alt);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .demo-dots {
+    display: flex;
+    gap: 0.4em;
+  }
+
+  .demo-dots i {
+    width: 0.7em;
+    height: 0.7em;
+    border-radius: 50%;
+    background: var(--line-strong);
+  }
+
+  .demo-app {
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--ink-muted);
+  }
+
+  .demo-mode {
+    justify-self: end;
+    padding: 0.1em 0.7em;
+    border-radius: 999px;
+    font-size: 0.85em;
+    font-weight: 500;
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+  }
+
+  .demo-body {
+    display: grid;
+    grid-template-columns: 1.08fr 1fr;
+    height: 29em;
+  }
+
+  /* ---------- 左：PDF ---------- */
+  .demo-pdf {
+    padding: 1.2em 1em 0 1.2em;
+    background: #ece6dc;
+    overflow: hidden;
+  }
+
+  .demo-page {
+    height: 100%;
+    padding: 1.3em 1.1em 0 2.5em;
+    background: #fffdfa;
+    border-radius: 4px 4px 0 0;
+    box-shadow: 0 2px 10px rgb(28 28 26 / 0.08);
+    font-size: 0.92em;
+    color: var(--ink);
+  }
+
+  .demo-page-title {
+    margin: 0 0 0.9em -1.4em;
+    font-family: var(--font-serif);
+    font-weight: 600;
+    font-size: 1.05em;
+  }
+
+  .qbox {
+    position: relative;
+    display: flex;
+    gap: 0.6em;
+    margin: 0 0 0.7em -0.55em;
+    padding: 0.45em 0.55em;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    transition:
+      background-color 0.25s var(--ease),
+      border-color 0.25s var(--ease);
+  }
+
+  .qbox p {
+    flex: 1;
+  }
+
+  .qdot {
+    position: absolute;
+    left: -1.75em;
+    top: 0.55em;
+    display: grid;
+    place-items: center;
+    width: 1.45em;
+    height: 1.45em;
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    background: var(--surface);
+    font-size: 0.82em;
+    font-weight: 600;
+    color: var(--ink-subtle);
+    transition: all 0.25s var(--ease);
+  }
+
+  .qbox::after {
+    content: '';
+    position: absolute;
+    left: -1px;
+    top: 0.3em;
+    bottom: 0.3em;
+    width: 3px;
+    border-radius: 2px;
+    background: var(--accent);
+    transform: scaleY(0);
+    transition: transform 0.3s var(--ease);
+  }
+
+  .qbox.is-selected {
+    background: rgb(217 119 87 / 0.09);
+    border-color: var(--accent);
+  }
+
+  .qbox.is-selected::after {
+    transform: scaleY(1);
+  }
+
+  .qbox.is-selected .qdot {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+
+  .qfig {
+    flex: none;
+    width: 2.6em;
+    color: var(--line-strong);
+  }
+
+  .demo-lines {
+    display: grid;
+    gap: 0.55em;
+    margin-top: 1.2em;
+  }
+
+  .demo-lines i {
+    height: 0.45em;
+    border-radius: 99px;
+    background: var(--line);
+  }
+
+  .demo-lines i:last-child {
+    width: 70%;
+  }
+
+  /* ---------- 右：講解面板 ---------- */
+  .demo-chat {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    border-left: 1px solid var(--line);
+    background: var(--surface);
+  }
+
+  .chat-head {
+    display: flex;
+    align-items: center;
+    height: 2.8em;
+    padding: 0 1em;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .chat-title {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6em;
+  }
+
+  .chat-title span,
+  .chat-empty {
+    font-size: 0.88em;
+    color: var(--ink-subtle);
+  }
+
+  .chat-msgs {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65em;
+    padding: 0.9em 0.9em 0.4em;
+    overflow: hidden;
+    font-size: 0.92em;
+  }
+
+  .msg {
+    max-width: 94%;
+    padding: 0.55em 0.8em;
+    border-radius: 0.9em;
+  }
+
+  .msg-user {
+    align-self: flex-end;
+    display: flex;
+    align-items: center;
+    gap: 0.6em;
+    border-bottom-right-radius: 0.25em;
+    background: var(--primary);
+    color: var(--on-primary);
+  }
+
+  .msg-thumb {
+    display: grid;
+    gap: 0.22em;
+    width: 2.2em;
+    padding: 0.35em;
+    border-radius: 4px;
+    background: rgb(250 247 242 / 0.92);
+  }
+
+  .msg-thumb i {
+    height: 0.22em;
+    border-radius: 9px;
+    background: var(--accent);
+    opacity: 0.6;
+  }
+
+  .msg-ai {
+    align-self: flex-start;
+    display: grid;
+    gap: 0.3em;
+    border-bottom-left-radius: 0.25em;
+    background: var(--bg);
+    border: 1px solid var(--line);
+  }
+
+  .formula {
+    padding: 0.2em 0.6em;
+    border-left: 2px solid var(--accent);
+    background: var(--surface);
+    font-family: var(--font-serif);
+    font-style: italic;
+    white-space: nowrap;
+  }
+
+  .msg-typing {
+    display: flex;
+    gap: 0.3em;
+    align-self: flex-start;
+    padding: 0.75em 0.9em;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-bottom-left-radius: 0.25em;
+  }
+
+  .msg-typing i {
+    width: 0.45em;
+    height: 0.45em;
+    border-radius: 50%;
+    background: var(--ink-subtle);
+    animation: typing 1s infinite ease-in-out;
+  }
+
+  .msg-typing i:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+
+  .msg-typing i:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+
+  .chat-hints {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4em;
+    padding: 0 0.9em 0.6em;
+  }
+
+  .hint-btn {
+    padding: 0.25em 0.75em;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    font-size: 0.85em;
+    color: var(--ink-muted);
+    background: var(--surface);
+    transition: all 0.2s var(--ease);
+  }
+
+  .hint-btn.is-pressed {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+  }
+
+  .chat-input {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 0.9em 0.9em;
+    padding: 0.45em 0.45em 0.45em 0.9em;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    font-size: 0.88em;
+    color: var(--ink-subtle);
+  }
+
+  .send {
+    width: 1.7em;
+    height: 1.7em;
+    border-radius: 50%;
+    background: var(--primary);
+  }
+
+  /* ---------- 游標 ---------- */
+  .demo-cursor {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    display: none;
+    transition-property: transform;
+    transition-timing-function: cubic-bezier(0.45, 0, 0.2, 1);
+    pointer-events: none;
+    filter: drop-shadow(0 2px 3px rgb(0 0 0 / 0.2));
+  }
+
+  .demo-cursor svg {
+    position: relative;
+    z-index: 1;
+    transition: transform 0.15s ease;
+  }
+
+  .demo-cursor.is-clicking svg {
+    transform: scale(0.82);
+  }
+
+  .demo-ripple {
+    position: absolute;
+    left: -11px;
+    top: -9px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: rgb(217 119 87 / 0.45);
+    opacity: 0;
+  }
+
+  .demo-cursor.is-clicking .demo-ripple {
+    animation: ripple 0.55s ease-out;
+  }
+
+  /* ---------- 動畫狀態（由 script 切換） ---------- */
+  .is-animated .demo-cursor {
+    display: block;
+  }
+
+  .is-off {
+    display: none !important;
+  }
+
+  .is-entering {
+    animation: enter 0.35s var(--ease) both;
+  }
+
+  .is-fading .chat-msgs,
+  .is-fading .chat-hints,
+  .is-fading .chat-head {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  @keyframes enter {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+  }
+
+  @keyframes typing {
+    0%,
+    60%,
+    100% {
+      transform: none;
+      opacity: 0.5;
+    }
+    30% {
+      transform: translateY(-0.25em);
+      opacity: 1;
+    }
+  }
+
+  @keyframes ripple {
+    from {
+      opacity: 1;
+      transform: scale(0.3);
+    }
+    to {
+      opacity: 0;
+      transform: scale(1.6);
+    }
+  }
+</style>
+
+<script>
+  const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  function setup(root: HTMLElement) {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const $ = <T extends HTMLElement = HTMLElement>(selector: string) => root.querySelector<T>(selector)!;
+    const q2 = $('[data-q="2"]');
+    const pdf = $('[data-pdf]');
+    const head = $('[data-head]');
+    const empty = $('[data-empty]');
+    const user = $('[data-step="user"]');
+    const ai1 = $('[data-step="ai1"]');
+    const ai2 = $('[data-step="ai2"]');
+    const typing = $('[data-step="typing"]');
+    const hints = $('[data-step="hints"]');
+    const next = $('[data-next]');
+    const input = $('.chat-input');
+    const cursor = $('[data-cursor]');
+
+    const streams = [...root.querySelectorAll<HTMLElement>('[data-stream]')];
+    const fullText = new Map(streams.map((el) => [el, el.textContent ?? '']));
+
+    let visible = false;
+    new IntersectionObserver(([entry]) => (visible = entry.isIntersecting), { threshold: 0.2 }).observe(root);
+
+    const show = (el: HTMLElement) => {
+      el.classList.remove('is-off', 'is-entering');
+      void el.offsetWidth;
+      el.classList.add('is-entering');
+    };
+    const hide = (el: HTMLElement) => el.classList.add('is-off');
+
+    const moveTo = (el: HTMLElement, fx: number, fy: number, duration: number) => {
+      const r = el.getBoundingClientRect();
+      const base = root.getBoundingClientRect();
+      const x = r.left - base.left + r.width * fx;
+      const y = r.top - base.top + r.height * fy;
+      cursor.style.transitionDuration = `${duration}ms`;
+      cursor.style.transform = `translate(${x}px, ${y}px)`;
+    };
+
+    const click = async () => {
+      cursor.classList.remove('is-clicking');
+      void cursor.offsetWidth;
+      cursor.classList.add('is-clicking');
+      await sleep(180);
+    };
+
+    const stream = async (container: HTMLElement) => {
+      for (const el of container.querySelectorAll<HTMLElement>('[data-stream]')) {
+        const text = fullText.get(el) ?? '';
+        const step = Math.max(14, Math.min(42, 1100 / text.length));
+        for (let i = 1; i <= text.length; i++) {
+          el.textContent = text.slice(0, i);
+          await sleep(step);
+        }
+        await sleep(160);
+      }
+    };
+
+    const reset = () => {
+      q2.classList.remove('is-selected');
+      next.classList.remove('is-pressed');
+      [head, user, ai1, ai2, typing, hints].forEach(hide);
+      show(empty);
+      streams.forEach((el) => (el.textContent = ''));
+      moveTo(pdf, 0.55, 0.92, 0);
+    };
+
+    const waitUntilVisible = async () => {
+      while (!visible || document.hidden) await sleep(300);
+    };
+
+    async function loop() {
+      root.classList.add('is-animated');
+      for (;;) {
+        reset();
+        await waitUntilVisible();
+        await sleep(700);
+
+        moveTo(q2, 0.32, 0.55, 1000);
+        await sleep(1100);
+        await click();
+        q2.classList.add('is-selected');
+        hide(empty);
+        show(head);
+        await sleep(350);
+
+        show(user);
+        await sleep(550);
+        show(typing);
+        await sleep(1000);
+        hide(typing);
+        show(ai1);
+        await stream(ai1);
+
+        await sleep(250);
+        show(hints);
+        await sleep(800);
+        moveTo(next, 0.5, 0.6, 850);
+        await sleep(950);
+        await click();
+        next.classList.add('is-pressed');
+        await sleep(300);
+
+        show(typing);
+        await sleep(850);
+        hide(typing);
+        show(ai2);
+        moveTo(input, 0.85, 1.6, 1200);
+        await stream(ai2);
+
+        await sleep(3400);
+        root.classList.add('is-fading');
+        await sleep(450);
+        root.classList.remove('is-fading');
+      }
+    }
+
+    loop();
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-demo]').forEach(setup);
+</script>

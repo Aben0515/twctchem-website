@@ -1,0 +1,304 @@
+---
+import Icon from './Icon.astro';
+import { products } from '../data/products';
+import { site } from '../site.config';
+import { type Lang, fill, localizePath, useTranslations } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const f = t.contact.form;
+const status = t.contact.status;
+const days = { days: site.replyWithinDays };
+const roles = Object.values(f.roles);
+---
+
+<form
+  class="contact-form"
+  action="https://api.web3forms.com/submit"
+  method="POST"
+  data-contact-form
+  data-sending={f.sending}
+  data-success-title={status.successTitle}
+  data-success-body={fill(status.successBody, days)}
+  data-error-title={status.errorTitle}
+  data-error-body={status.errorBody}
+  data-email={site.email}
+>
+  <input type="hidden" name="access_key" value={site.web3formsKey} />
+  <input type="hidden" name="from_name" value={`${site.shortName} ${lang === 'en' ? 'website' : '官網'}`} />
+  <input type="hidden" name="language" value={lang} />
+  <!-- honeypot：真人看不到也不會勾，機器人通常會勾 -->
+  <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+  <p class="form-note">{f.requiredNote}</p>
+
+  <div class="field-row">
+    <div class="field">
+      <label for="cf-name">{f.name} <span class="req" aria-hidden="true">*</span></label>
+      <input id="cf-name" name="name" type="text" autocomplete="name" required />
+    </div>
+    <div class="field">
+      <label for="cf-email">{f.email} <span class="req" aria-hidden="true">*</span></label>
+      <input id="cf-email" name="email" type="email" autocomplete="email" required />
+    </div>
+  </div>
+
+  <div class="field-row">
+    <div class="field">
+      <label for="cf-org">{f.organization} <span class="hint">({f.organizationHint})</span></label>
+      <input id="cf-org" name="organization" type="text" autocomplete="organization" />
+    </div>
+    <div class="field">
+      <label for="cf-role">{f.role} <span class="req" aria-hidden="true">*</span></label>
+      <select id="cf-role" name="role" required>
+        <option value="">{f.rolePlaceholder}</option>
+        {roles.map((label) => <option value={label}>{label}</option>)}
+      </select>
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="cf-product">{f.product}</label>
+    <select id="cf-product" name="product" data-product-select>
+      <option value={f.productGeneral} data-id="general">{f.productGeneral}</option>
+      {products.map((product) => <option value={product.name[lang]} data-id={product.id}>{product.name[lang]}</option>)}
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="cf-subject">{f.subject} <span class="req" aria-hidden="true">*</span></label>
+    <input id="cf-subject" name="subject" type="text" required />
+  </div>
+
+  <div class="field">
+    <label for="cf-message">{f.message} <span class="req" aria-hidden="true">*</span></label>
+    <textarea id="cf-message" name="message" rows="6" placeholder={f.messagePlaceholder} required></textarea>
+  </div>
+
+  <div class="form-status" data-form-status role="status" aria-live="polite" hidden></div>
+
+  <div class="form-actions">
+    <button class="btn btn--primary" type="submit" data-submit>
+      <span data-submit-label>{f.submit}</span>
+      <Icon name="arrow" size={18} />
+    </button>
+    <p class="consent">
+      {f.consent.before}<a href={localizePath(lang, '/privacy/')}>{f.consent.link}</a>{f.consent.after}
+    </p>
+  </div>
+</form>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+
+  if (form) {
+    const statusBox = form.querySelector<HTMLElement>('[data-form-status]')!;
+    const submit = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+    const label = form.querySelector<HTMLElement>('[data-submit-label]')!;
+    const idleLabel = label.textContent ?? '';
+    const productSelect = form.querySelector<HTMLSelectElement>('[data-product-select]')!;
+
+    // ?product=xxx 自動選好對應產品
+    const wanted = new URLSearchParams(window.location.search).get('product');
+    const selectWanted = () => {
+      if (!wanted) return;
+      const option = Array.from(productSelect.options).find((o) => o.dataset.id === wanted);
+      if (option) productSelect.value = option.value;
+    };
+    selectWanted();
+
+    function showStatus(kind: 'success' | 'error', title: string, body: string, email?: string) {
+      statusBox.hidden = false;
+      statusBox.className = `form-status form-status--${kind}`;
+      statusBox.replaceChildren();
+      const strong = document.createElement('strong');
+      strong.textContent = title;
+      const p = document.createElement('p');
+      p.textContent = body + (email ? ' ' : '');
+      if (email) {
+        const a = document.createElement('a');
+        a.href = `mailto:${email}`;
+        a.textContent = email;
+        p.append(a);
+      }
+      statusBox.append(strong, p);
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (!form.reportValidity()) return;
+
+      const data = new FormData(form);
+      // honeypot 被勾選：假裝成功，不實際送出
+      if (data.get('botcheck')) {
+        showStatus('success', form.dataset.successTitle!, form.dataset.successBody!);
+        return;
+      }
+
+      submit.disabled = true;
+      label.textContent = form.dataset.sending ?? '';
+      statusBox.hidden = true;
+
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          headers: { Accept: 'application/json' },
+          body: data,
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || result.success === false) throw new Error(result.message ?? 'Request failed');
+
+        form.reset();
+        selectWanted();
+        showStatus('success', form.dataset.successTitle!, form.dataset.successBody!);
+      } catch {
+        showStatus('error', form.dataset.errorTitle!, form.dataset.errorBody!, form.dataset.email);
+      } finally {
+        submit.disabled = false;
+        label.textContent = idleLabel;
+      }
+    });
+  }
+</script>
+
+<style>
+  .contact-form {
+    display: grid;
+    gap: 1.25rem;
+    padding: clamp(1.5rem, 1.2rem + 1.5vw, 2.5rem);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .hp {
+    display: none;
+  }
+
+  .form-note {
+    font-size: var(--fs-14);
+    color: var(--ink-subtle);
+  }
+
+  .field-row {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .field {
+    display: grid;
+    gap: 0.4rem;
+    min-width: 0;
+  }
+
+  .field label {
+    font-size: var(--fs-14);
+    font-weight: 500;
+  }
+
+  .req {
+    color: var(--accent-strong);
+  }
+
+  .hint {
+    font-weight: 400;
+    color: var(--ink-subtle);
+  }
+
+  .field input,
+  .field select,
+  .field textarea {
+    width: 100%;
+    min-height: 48px;
+    padding: 0.7rem 0.9rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--bg);
+    transition:
+      border-color 0.2s var(--ease),
+      box-shadow 0.2s var(--ease);
+  }
+
+  .field textarea {
+    resize: vertical;
+    line-height: 1.7;
+  }
+
+  .field input:hover,
+  .field select:hover,
+  .field textarea:hover {
+    border-color: var(--ink-subtle);
+  }
+
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-soft);
+  }
+
+  .field textarea::placeholder {
+    color: var(--ink-subtle);
+  }
+
+  .form-status {
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    font-size: 0.9375rem;
+  }
+
+  .form-status[hidden] {
+    display: none;
+  }
+
+  .form-status--success {
+    background: var(--primary-soft);
+    border-color: var(--primary);
+    color: var(--primary-deep);
+  }
+
+  .form-status--error {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--ink);
+  }
+
+  .form-status a {
+    font-weight: 500;
+    border-bottom: 1px solid currentColor;
+  }
+
+  .form-actions {
+    display: grid;
+    gap: 1rem;
+    justify-items: start;
+  }
+
+  .form-actions .btn:disabled {
+    opacity: 0.65;
+    cursor: progress;
+  }
+
+  .consent {
+    font-size: var(--fs-14);
+    color: var(--ink-subtle);
+  }
+
+  .consent a {
+    color: var(--primary);
+    border-bottom: 1px solid var(--line-strong);
+  }
+
+  @media (min-width: 640px) {
+    .field-row {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

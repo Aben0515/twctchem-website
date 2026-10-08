@@ -1,0 +1,164 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { site } from '../site.config';
+import { products } from '../data/products';
+import { type Lang, localizePath, useTranslations } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const year = new Date().getFullYear();
+
+const sitemapLinks = [
+  { href: '/', label: t.footer.home },
+  { href: '/products/', label: t.nav.products },
+  { href: '/about/', label: t.nav.about },
+  { href: '/faq/', label: t.nav.faq },
+  { href: '/contact/', label: t.nav.contact },
+];
+
+const legalLinks = [
+  { href: '/privacy/', label: t.footer.privacy },
+  { href: '/terms/', label: t.footer.terms },
+];
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href={localizePath(lang, '/')} aria-label={t.nav.home}><Logo /></a>
+        <p>{t.footer.blurb}</p>
+        <a class="footer-email" href={`mailto:${site.email}`}>
+          <Icon name="mail" size={18} />
+          {site.email}
+        </a>
+      </div>
+
+      <nav class="footer-col" aria-label={t.footer.sitemap}>
+        <h2>{t.footer.sitemap}</h2>
+        <ul role="list">
+          {sitemapLinks.map((link) => <li><a href={localizePath(lang, link.href)}>{link.label}</a></li>)}
+        </ul>
+      </nav>
+
+      <nav class="footer-col" aria-label={t.footer.products}>
+        <h2>{t.footer.products}</h2>
+        <ul role="list">
+          {
+            products.map((product) => (
+              <li>
+                <a href={localizePath(lang, `/products/#${product.id}`)}>{product.name[lang]}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <nav class="footer-col" aria-label={t.footer.legal}>
+        <h2>{t.footer.legal}</h2>
+        <ul role="list">
+          {legalLinks.map((link) => <li><a href={localizePath(lang, link.href)}>{link.label}</a></li>)}
+        </ul>
+      </nav>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© {year} {site.name[lang]}{lang === 'en' ? '. ' : ' '}{t.footer.rights}</p>
+      <p>{t.footer.taxId}{lang === 'en' ? ': ' : '：'}{site.taxId}</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    padding-block: 4rem 2rem;
+    background: var(--bg-alt);
+    border-top: 1px solid var(--line);
+    font-size: 0.9375rem;
+  }
+
+  .footer-grid {
+    display: grid;
+    gap: 2.5rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .footer-brand {
+    grid-column: 1 / -1;
+    display: grid;
+    justify-items: start;
+    gap: 1rem;
+    max-width: 22rem;
+  }
+
+  .footer-brand p {
+    color: var(--ink-muted);
+  }
+
+  .footer-email {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    color: var(--primary);
+  }
+
+  .footer-email:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .footer-col h2 {
+    margin-bottom: 0.75rem;
+    font-family: var(--font-sans);
+    font-size: var(--fs-14);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  .footer-col ul {
+    display: grid;
+    gap: 0.125rem;
+  }
+
+  .footer-col a {
+    display: inline-block;
+    padding-block: 0.3rem;
+    color: var(--ink-muted);
+    transition: color 0.2s var(--ease);
+  }
+
+  .footer-col a:hover {
+    color: var(--primary);
+  }
+
+  .footer-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem 2rem;
+    margin-top: 3.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line-strong);
+    font-size: var(--fs-14);
+    color: var(--ink-subtle);
+  }
+
+  @media (min-width: 900px) {
+    .footer-grid {
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem;
+    }
+
+    .footer-brand {
+      grid-column: auto;
+    }
+  }
+</style>

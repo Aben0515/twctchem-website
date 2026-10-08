@@ -1,0 +1,111 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  title: string;
+  body: string;
+  buttonLabel: string;
+  href: string;
+  email?: string;
+}
+
+const { title, body, buttonLabel, href, email } = Astro.props;
+---
+
+<section class="section cta-section">
+  <div class="container">
+    <div class="cta-panel" data-reveal>
+      <svg class="cta-deco" viewBox="0 0 400 400" aria-hidden="true" focusable="false">
+        <circle cx="200" cy="200" r="120" fill="none" stroke="currentColor" stroke-width="1"></circle>
+        <circle cx="200" cy="200" r="160" fill="none" stroke="currentColor" stroke-width="1"></circle>
+        <circle cx="200" cy="200" r="199" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="2 8"></circle>
+      </svg>
+      <div class="cta-content">
+        <h2>{title}</h2>
+        <p>{body}</p>
+      </div>
+      <div class="cta-actions">
+        <a class="btn btn--light" href={href}>
+          {buttonLabel}
+          <Icon name="arrow" size={18} />
+        </a>
+        {email && <a class="cta-email" href={`mailto:${email}`}>{email}</a>}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta-section {
+    padding-top: 0;
+  }
+
+  .cta-panel {
+    position: relative;
+    display: grid;
+    gap: 2rem;
+    overflow: hidden;
+    padding: clamp(2.25rem, 1.5rem + 3.5vw, 4.5rem);
+    border-radius: var(--radius-lg);
+    background:
+      radial-gradient(120% 140% at 100% 0%, rgb(217 119 87 / 0.16), transparent 55%),
+      var(--primary);
+    color: var(--on-primary);
+  }
+
+  .cta-deco {
+    position: absolute;
+    right: -120px;
+    bottom: -160px;
+    width: 420px;
+    height: 420px;
+    color: rgb(250 247 242 / 0.14);
+    pointer-events: none;
+  }
+
+  .cta-content {
+    position: relative;
+    display: grid;
+    gap: 0.875rem;
+    max-width: 36rem;
+  }
+
+  .cta-content h2 {
+    color: var(--on-primary);
+  }
+
+  .cta-content p {
+    color: rgb(250 247 242 / 0.82);
+    font-size: var(--fs-18);
+  }
+
+  .cta-actions {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.5rem;
+  }
+
+  .cta-email {
+    color: rgb(250 247 242 / 0.86);
+    border-bottom: 1px solid rgb(250 247 242 / 0.35);
+    transition: border-color 0.2s var(--ease);
+  }
+
+  .cta-email:hover {
+    border-bottom-color: var(--on-primary);
+  }
+
+  @media (min-width: 900px) {
+    .cta-panel {
+      grid-template-columns: 1fr auto;
+      align-items: center;
+    }
+
+    .cta-actions {
+      flex-direction: column;
+      align-items: flex-end;
+    }
+  }
+</style>

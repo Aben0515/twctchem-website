@@ -1,0 +1,76 @@
+---
+interface Props {
+  src: string;
+  label: string;
+}
+
+const { src, label } = Astro.props;
+---
+
+<div class="demo-video" data-demo-video>
+  <!-- #t=0.1 + preload="metadata"：不下載整支影片，只取第一格當封面 -->
+  <video muted loop playsinline controls preload="metadata" aria-label={label} src={`${src}#t=0.1`}></video>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-demo-video]').forEach((box) => {
+    const video = box.querySelector('video');
+    if (!video) return;
+    // 減少動態：不自動播放，由使用者自己按
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!('IntersectionObserver' in window)) return;
+
+    // 使用者手動暫停後，不再自動播放
+    let userPaused = false;
+    let autoPausing = false;
+
+    video.addEventListener('pause', () => {
+      // pause 事件是非同步觸發，所以旗標在事件裡才清掉
+      if (autoPausing) autoPausing = false;
+      else if (!video.ended) userPaused = true;
+    });
+    video.addEventListener('play', () => {
+      userPaused = false;
+    });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // 同一批可能有多筆，以最新一筆為準
+        const entry = entries[entries.length - 1];
+        if (entry.isIntersecting) {
+          if (userPaused) return;
+          video.preload = 'auto';
+          video.play().catch(() => {
+            // 瀏覽器擋下自動播放時，使用者仍可用控制列播放
+          });
+        } else if (!video.paused) {
+          autoPausing = true;
+          video.pause();
+        }
+      },
+      { threshold: 0.4 },
+    );
+    observer.observe(video);
+  });
+</script>
+
+<style>
+  .demo-video {
+    overflow: hidden;
+    max-width: 62rem;
+    margin-inline: auto;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    box-shadow: var(--shadow-md);
+  }
+
+  .demo-video video {
+    display: block;
+    width: 100%;
+    height: auto;
+    /* 影片實際尺寸 1920×1080（16:9），先佔位避免版面跳動 */
+    aspect-ratio: 16 / 9;
+    background: var(--surface);
+  }
+</style>

@@ -42,6 +42,13 @@ const zh = {
       note: '合作洽詢',
       illustrationLabel: 'PDF-Tutor 操作演示：點選作業上的題目後，AI 家教以提示模式逐步講解',
     },
+    demo: {
+      eyebrow: '實際操作',
+      title: '30 秒看懂 PDF-Tutor',
+      lead: '上傳作業 PDF，直接點選題目，AI 家教就以提示模式一步步引導，還能隨時追問。',
+      label: 'PDF-Tutor 30 秒操作示範影片',
+      watch: '觀看 30 秒示範',
+    },
     story: {
       eyebrow: '名字的由來',
       quote: '德先生與賽先生',

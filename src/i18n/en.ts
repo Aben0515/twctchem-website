@@ -44,6 +44,13 @@ const en: Dictionary = {
       note: 'Partnerships',
       illustrationLabel: 'PDF-Tutor demo: tapping a homework question and getting step-by-step hints from the AI tutor',
     },
+    demo: {
+      eyebrow: 'See it in action',
+      title: 'PDF-Tutor in 30 seconds',
+      lead: 'Open a homework PDF and tap a question. The AI tutor guides you step by step in hint mode, and you can keep asking follow-up questions.',
+      label: 'PDF-Tutor 30-second demo video',
+      watch: 'Watch the 30-second demo',
+    },
     story: {
       eyebrow: 'The name',
       quote: 'Mr. Democracy and Mr. Science',

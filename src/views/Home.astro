@@ -4,6 +4,7 @@ import Icon from '../components/Icon.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 import ProductCard from '../components/ProductCard.astro';
 import CTABanner from '../components/CTABanner.astro';
+import DemoVideo from '../components/DemoVideo.astro';
 import HeroDemo from '../components/HeroDemo.astro';
 import HeroIntro from '../components/HeroIntro.astro';
 import HeroWatermark from '../components/HeroWatermark.astro';
@@ -20,6 +21,8 @@ const { lang } = Astro.props;
 const t = useTranslations(lang);
 const home = t.home;
 const otherLang: Lang = lang === 'en' ? 'zh-TW' : 'en';
+// 該語言有示範影片才顯示 #demo 區塊與 hero 的「觀看示範」按鈕
+const demoSrc = products.find((p) => p.id === 'pdf-tutor')?.demoVideo?.[lang] ?? null;
 ---
 
 <BaseLayout lang={lang}>
@@ -53,6 +56,14 @@ const otherLang: Lang = lang === 'en' ? 'zh-TW' : 'en';
             <Icon name="arrow" size={18} />
           </a>
           <a class="btn btn--secondary" href={localizePath(lang, '/contact/')}>{home.hero.secondary}</a>
+          {
+            demoSrc && (
+              <a class="btn btn--secondary" href="#demo">
+                <Icon name="play" size={18} />
+                {home.demo.watch}
+              </a>
+            )
+          }
         </div>
         <p class="hero-note">
           <span>{home.hero.note}</span>
@@ -65,6 +76,18 @@ const otherLang: Lang = lang === 'en' ? 'zh-TW' : 'en';
       </div>
     </div>
   </section>
+
+  <!-- 30 秒示範影片：hero 正下方，捲到才自動播放 -->
+  {
+    demoSrc && (
+      <section class="section demo" id="demo">
+        <div class="container" data-reveal>
+          <SectionHeading eyebrow={home.demo.eyebrow} title={home.demo.title} lead={home.demo.lead} />
+          <DemoVideo src={demoSrc} label={home.demo.label} />
+        </div>
+      </section>
+    )
+  }
 
   <!-- 名字的由來：hero 與內容之間的停頓點 -->
   <section class="story">
@@ -330,6 +353,16 @@ const otherLang: Lang = lang === 'en' ? 'zh-TW' : 'en';
       justify-self: end;
       margin-right: -1rem;
     }
+  }
+
+  /* ---------- 示範影片 ---------- */
+  .demo {
+    padding-block: clamp(1.5rem, 1rem + 2vw, 3rem) 0;
+    scroll-margin-top: 5rem;
+  }
+
+  .demo :global(.section-heading) {
+    margin-bottom: clamp(1.75rem, 1.5rem + 1.5vw, 2.5rem);
   }
 
   /* ---------- 名字的由來 ---------- */

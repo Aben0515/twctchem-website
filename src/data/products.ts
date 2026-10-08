@@ -1,4 +1,4 @@
-import type { Localized } from '../i18n/utils';
+import type { Lang, Localized } from '../i18n/utils';
 import type { IconName } from '../components/icons';
 
 export type ProductStatus = 'live' | 'beta' | 'coming-soon';
@@ -18,6 +18,8 @@ export interface Product {
   url?: string;
   /** 卡片上的補充說明（例如需要邀請碼） */
   note?: Localized<string>;
+  /** 示範影片路徑（放在 public/）；某語言為 null 代表還沒有該語言的影片 */
+  demoVideo?: Partial<Record<Lang, string | null>>;
 }
 
 export const products: Product[] = [
@@ -48,6 +50,7 @@ export const products: Product[] = [
     status: 'live',
     icon: 'document',
     url: 'https://pdf-tutor.pdf-tutor.workers.dev/',
+    demoVideo: { 'zh-TW': '/videos/pdf-tutor-demo.zh-TW.mp4', en: null },
     note: {
       'zh-TW': '雲端版需要邀請碼才能建立帳號，請向學校或管理員索取，或來信洽詢。',
       en: 'The cloud version needs an invite code to create an account — ask your school or administrator, or write to us.',

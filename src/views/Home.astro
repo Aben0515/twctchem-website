@@ -24,7 +24,7 @@ const home = t.home;
   <section class="hero">
     <div class="hero-lines" aria-hidden="true"></div>
     <div class="container hero-grid">
-      <div class="hero-copy" data-reveal>
+      <div class="hero-copy">
         <p class="eyebrow">{home.hero.eyebrow}</p>
         <h1 set:html={home.hero.title} />
         <p class="lead">{home.hero.lead}</p>
@@ -40,7 +40,7 @@ const home = t.home;
           <a href={`mailto:${site.email}`}>{site.email}</a>
         </p>
       </div>
-      <div class="hero-art" data-reveal style="--reveal-delay: 0.15s">
+      <div class="hero-art">
         <HeroDemo lang={lang} label={home.hero.illustrationLabel} />
       </div>
     </div>

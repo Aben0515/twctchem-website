@@ -8,7 +8,7 @@ interface Props {
 }
 
 const { lang } = Astro.props;
-// Vercel 只會用同一份 404.html 回應所有錯誤網址，所以同時顯示另一種語言
+// GitHub Pages 只會用同一份 404.html 回應所有錯誤網址，所以同時顯示另一種語言
 const other: Lang = lang === 'en' ? 'zh-TW' : 'en';
 const t = useTranslations(lang);
 const o = useTranslations(other);
@@ -17,7 +17,7 @@ const o = useTranslations(other);
 <BaseLayout lang={lang} title={t.notFound.meta.title} noindex>
   <section class="section not-found">
     <div class="container">
-      <div class="not-found-inner" data-reveal>
+      <div class="not-found-inner">
         <p class="code" aria-hidden="true">{t.notFound.code}</p>
         <h1>{t.notFound.title}</h1>
         <p class="lead">{t.notFound.body}</p>

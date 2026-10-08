@@ -3,6 +3,7 @@ import Logo from './Logo.astro';
 import Icon from './Icon.astro';
 import LanguageSwitcher from './LanguageSwitcher.astro';
 import { type Lang, localizePath, stripLangPrefix, useTranslations } from '../i18n/utils';
+import { site } from '../site.config';
 
 interface Props {
   lang: Lang;
@@ -21,8 +22,8 @@ const links = [
 
 <header class="site-header" data-header>
   <div class="container header-inner">
-    <a class="brand" href={localizePath(lang, '/')} aria-label={t.nav.home}>
-      <Logo />
+    <a class="brand" href={localizePath(lang, '/')} aria-label={`${site.name[lang]} – ${t.nav.home}`}>
+      <Logo lang={lang} />
     </a>
 
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-menu-toggle>

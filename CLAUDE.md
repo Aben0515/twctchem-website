@@ -30,13 +30,15 @@ Astro 靜態網站，push 到 GitHub `main` 後由 GitHub Actions（`.github/wor
 ## 設計系統（`src/styles/global.css`）
 - **只用 CSS 變數**：`--bg`、`--bg-alt`、`--surface`、`--ink`、`--ink-muted`、`--primary`、`--accent`、`--accent-strong`、`--line` 等，不要自己寫新的色碼
 - **陶土橘**：只用在小面積強調，文字要用 `--accent-strong`；主要按鈕一律用墨綠
+- **對比**：文字至少 4.5:1；`--ink-subtle` 在 `--bg-alt` 上不夠（4.15:1），淺米色底的小字改用 `--ink-muted`
+- **字體**：Google Fonts 用 `preload` + `onload` 非阻擋載入（`BaseLayout.astro` 的 `fontsHref`），中文字體很大，不要改回一般的 stylesheet 連結
 - **現成的 class**
   - `.container`、`.section`、`.section--alt`、`.section--surface`
   - `.eyebrow`、`.lead`、`.btn btn--primary|secondary|light|sm`
   - `.link-arrow`、`.badge badge--live|beta|coming-soon`、`.tag`
 - **區塊標題**：用 `<SectionHeading eyebrow title lead />`
 - **頁尾 CTA**：用 `<CTABanner />`
-- **進場動畫**：在元素上加 `data-reveal`，錯開時間用 `style="--reveal-delay: .08s"`
+- **進場動畫**：在元素上加 `data-reveal`，錯開時間用 `style="--reveal-delay: .08s"`。**第一屏（hero）不要加**：它會讓內容在 JS 執行前保持透明，拖慢 LCP
 - **質感原則**：留白多、圓角 12–20px、細米灰框線、陰影要很淡，不用圖庫照片
 
 ## 進度
@@ -45,10 +47,11 @@ Astro 靜態網站，push 到 GitHub `main` 後由 GitHub Actions（`.github/wor
 補充：
 - FAQ 資料在 `src/data/faq.ts`；法律頁條文在 `i18n` 的 `privacy` / `terms`，由 `LegalLayout.astro` 渲染，條文裡的 `{company}`、`{email}` 會自動代入，最後更新日期在 `site.config.ts` 的 `legalUpdated`
 - 文案裡的 `{days}` 等佔位字串用 `fill()`（`i18n/utils.ts`）代入
-- 聯絡表單是 `ContactForm.astro`，需要先把 `site.config.ts` 的 `web3formsKey` 換成真的 key，否則送出會顯示失敗
-- 404 同時有 `src/pages/404.astro` 與 `src/pages/en/404.astro`（Vercel 只會用 `/404.html`，所以頁面上同時顯示兩種語言）
+- 聯絡表單是 `ContactForm.astro`，用 Web3Forms 寄到 sales@twctchem.com（key 在 `site.config.ts`）
+- 404 同時有 `src/pages/404.astro` 與 `src/pages/en/404.astro`（GitHub Pages 只會用 `/404.html`，所以頁面上同時顯示兩種語言）
 
 待完成：
-1. 把 `site.config.ts` 的佔位字串（公司名稱、統編、成立年份、Web3Forms key）換成真實資料
-2. 隱私權政策、服務條款（公司目前沒有法務，頁面已不標註「請法務確認」；上線前由負責人逐條對照實際營運情形確認）
-3. 驗證：Lighthouse 分數、部署後實際送出一次表單
+1. 隱私權政策、服務條款（公司目前沒有法務，頁面已不標註「請法務確認」；上線前由負責人逐條對照實際營運情形確認）
+2. 部署後實際送出一次聯絡表單，確認 sales@twctchem.com 收得到
+
+已驗證（2026-10-09，Lighthouse 12.8）：無障礙 100、最佳做法 100、SEO 100（首頁、產品、FAQ、關於、聯絡）。效能以實際瀏覽器量測為準：首次繪製約 0.35 秒；Lighthouse 模擬的手機分數浮動很大，主因是約 2.5MB 的中文網路字體

@@ -31,7 +31,7 @@ const legalLinks = [
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
-        <a href={localizePath(lang, '/')} aria-label={t.nav.home}><Logo /></a>
+        <a href={localizePath(lang, '/')} aria-label={`${site.name[lang]} – ${t.nav.home}`}><Logo lang={lang} /></a>
         <p>{t.footer.blurb}</p>
         <a class="footer-email" href={`mailto:${site.email}`}>
           <Icon name="mail" size={18} />
@@ -148,7 +148,7 @@ const legalLinks = [
     padding-top: 1.5rem;
     border-top: 1px solid var(--line-strong);
     font-size: var(--fs-14);
-    color: var(--ink-subtle);
+    color: var(--ink-muted);
   }
 
   @media (min-width: 900px) {

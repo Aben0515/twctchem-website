@@ -4,9 +4,7 @@
  */
 export const site = {
   url: 'https://twctchem.com',
-  /** 品牌簡稱，用在 Logo 文字 */
-  shortName: 'TWCT',
-  /** 公司正式名稱 */
+  /** 品牌名稱：Logo、網頁標題、頁尾版權都用這個（依語言切換） */
   name: {
     'zh-TW': '賽先生',
     en: 'Cyber Tutor',

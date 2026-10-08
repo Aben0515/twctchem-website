@@ -29,7 +29,7 @@ const roles = Object.values(f.roles);
   data-email={site.email}
 >
   <input type="hidden" name="access_key" value={site.web3formsKey} />
-  <input type="hidden" name="from_name" value={`${site.shortName} ${lang === 'en' ? 'website' : '官網'}`} />
+  <input type="hidden" name="from_name" value={`${site.name[lang]} ${lang === 'en' ? 'website' : '官網'}`} />
   <input type="hidden" name="language" value={lang} />
   <!-- honeypot：真人看不到也不會勾，機器人通常會勾 -->
   <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />

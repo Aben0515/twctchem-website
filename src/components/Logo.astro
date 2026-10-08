@@ -1,7 +1,10 @@
 ---
 import { site } from '../site.config';
+import type { Lang } from '../i18n/utils';
 
 interface Props {
+  /** Logo 文字依語言顯示品牌名稱 */
+  lang: Lang;
   /** 圖形標誌邊長（px） */
   size?: number;
   /** 只顯示圖形標誌 */
@@ -10,7 +13,7 @@ interface Props {
   inverted?: boolean;
 }
 
-const { size = 34, markOnly = false, inverted = false } = Astro.props;
+const { lang, size = 34, markOnly = false, inverted = false } = Astro.props;
 ---
 
 <span class:list={['logo', { 'logo--inverted': inverted }]}>
@@ -21,7 +24,7 @@ const { size = 34, markOnly = false, inverted = false } = Astro.props;
     <path d="M24.5 10.2c-3-1-6-.6-8.5 1.3v11.6c2.5-1.6 5.5-2 8.5-1.1z" fill="#FAF7F2" opacity="0.78"></path>
     <path d="M19.6 9.4h2.6v5.4l-1.3-1-1.3 1z" fill="#D97757"></path>
   </svg>
-  {!markOnly && <span class="logo-word">{site.shortName}</span>}
+  {!markOnly && <span class="logo-word">{site.name[lang]}</span>}
 </span>
 
 <style>

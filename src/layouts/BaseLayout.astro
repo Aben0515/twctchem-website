@@ -26,6 +26,8 @@ const zhUrl = new URL(localizePath('zh-TW', basePath), Astro.site);
 const enUrl = new URL(localizePath('en', basePath), Astro.site);
 const ogImage = new URL('/og-image.png', Astro.site);
 const ogLocale = lang === 'en' ? 'en_US' : 'zh_TW';
+const fontsHref =
+  'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap';
 
 const organization = {
   '@context': 'https://schema.org',
@@ -71,10 +73,14 @@ const organization = {
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- 字體表不阻擋首次繪製：先用系統字顯示，載完再換（display=swap） -->
     <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap"
+      rel="preload"
+      as="style"
+      href={fontsHref}
+      onload="this.onload=null;this.rel='stylesheet'"
     />
+    <noscript><link rel="stylesheet" href={fontsHref} /></noscript>
 
     <script is:inline>
       document.documentElement.classList.add('js');

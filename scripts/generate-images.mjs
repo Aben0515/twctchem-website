@@ -23,7 +23,8 @@ const og = `
   <circle cx="1010" cy="315" r="290" fill="none" stroke="#D6CEBF" stroke-dasharray="3 10"/>
   ${mark(880, 185, 260)}
   ${mark(96, 96, 72)}
-  <text x="190" y="146" font-family="Georgia, 'Times New Roman', serif" font-size="44" font-weight="700" letter-spacing="4" fill="#1C1C1A">TWCT</text>
+  <text x="190" y="149" font-family="'Noto Serif TC', 'Microsoft JhengHei', serif" font-size="46" font-weight="700" letter-spacing="4" fill="#1C1C1A">賽先生</text>
+  <text x="362" y="147" font-family="Georgia, 'Times New Roman', serif" font-size="30" font-weight="600" fill="#5B5A55">Cyber Tutor</text>
   <rect x="96" y="300" width="56" height="3" fill="#D97757"/>
   <text x="96" y="380" font-family="Georgia, 'Times New Roman', serif" font-size="58" font-weight="700" fill="#1C1C1A">AI learning tools</text>
   <text x="96" y="450" font-family="Georgia, 'Times New Roman', serif" font-size="58" font-weight="700" fill="#1F4D3A">for every classroom.</text>
